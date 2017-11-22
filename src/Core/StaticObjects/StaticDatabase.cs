@@ -17,11 +17,9 @@ namespace KerbalKonstructs.Core
         //make the list private, so nobody does easily add or remove from it. the array is updated in the Add and Remove functions
         // arrays are always optimized (also in foreach loops)
         private static List<StaticInstance> _allStaticInstances = new List<StaticInstance>();
-        internal static StaticInstance [] allStaticInstances  = new StaticInstance [0] ;
+        internal static StaticInstance[] allStaticInstances = new StaticInstance[0];
 
         internal static string activeBodyName = "";
-
-
 
 
         /// <summary>
@@ -46,8 +44,8 @@ namespace KerbalKonstructs.Core
 				{
 					group.alwaysActive = true;
 
-				}				
-				group.active = true;				
+				}
+				group.active = true;
 				groupList[bodyName].Add(groupName, group);
 			}
 			groupList[bodyName][groupName].AddStatic(instance);
@@ -111,7 +109,6 @@ namespace KerbalKonstructs.Core
                 if (newGroup == "Ungrouped")
                 {
                     group.alwaysActive = true;
-
                 }
                 group.active = true;
                 groupList[bodyName].Add(newGroup, group);
@@ -128,8 +125,7 @@ namespace KerbalKonstructs.Core
         /// <param name="instance"></param>
         private static void SetNewName(StaticInstance instance)
         {
-            string modelName = instance.model.name;
-            string groupName = instance.Group; 
+            string groupName = instance.Group;
 
             int modelCount = (from obj in groupList[instance.CelestialBody.name][groupName].GetStatics() where obj.model.name == instance.model.name select obj).Count();
             if (modelCount == 0)
@@ -172,9 +168,8 @@ namespace KerbalKonstructs.Core
 			{
 				if (instance.CelestialBody == cBody)
 					InstanceUtil.SetActiveRecursively(instance, bActive);
-				else
-					if (bOpposite)
-						InstanceUtil.SetActiveRecursively(instance, !bActive);
+				else if (bOpposite)
+					InstanceUtil.SetActiveRecursively(instance, !bActive);
 			}
 		}
 
@@ -192,9 +187,8 @@ namespace KerbalKonstructs.Core
 			{
 				if (instance.Group == sGroup)
 					InstanceUtil.SetActiveRecursively(instance, bActive);
-				else
-					if (bOpposite)
-						InstanceUtil.SetActiveRecursively(instance, !bActive);
+				else if (bOpposite)
+					InstanceUtil.SetActiveRecursively(instance, !bActive);
 			}
 		}
 
@@ -203,7 +197,7 @@ namespace KerbalKonstructs.Core
 			if (activeBodyName == "")
 			{
                 Log.Debug("StaticDatabase.cacheAll() skipped. No activeBodyName.");
-				
+
 				return;
 			}
 
@@ -214,7 +208,7 @@ namespace KerbalKonstructs.Core
 				foreach (StaticGroup group in groupList[activeBodyName].Values)
 				{
                     Log.Debug("StaticDatabase.cacheAll(): cacheAll() " + group.groupName);
-					
+
 					if (group.active)
 						group.CacheAll();
 
@@ -286,7 +280,7 @@ namespace KerbalKonstructs.Core
 			{
                     //Log.Warning("StaticDatabase.updateCache(): vPlayerPos is still v3.zero ");
 			}
-			
+
 			if (groupList.ContainsKey(activeBodyName))
 			{
 				foreach (StaticGroup group in groupList[activeBodyName].Values)
@@ -294,7 +288,7 @@ namespace KerbalKonstructs.Core
 					if (!group.bLiveUpdate)
 					{
                         //Log.Normal("StaticDatabase.updateCache(): live update (updateCacheSettings) of group " + group.groupName);
-						
+
 						group.UpdateCacheSettings();
 						group.bLiveUpdate = true;
 					}
@@ -314,23 +308,23 @@ namespace KerbalKonstructs.Core
 							break;
 						}
 
-						if (center == Vector3.zero)
+						if (center == Vector3d.zero)
 						{
                             Log.Debug("StaticDatabase.updateCache(): center of group is still v3.zero " + group.groupName);
 						}
-						
+
 						//if (KerbalKonstructs.instance.DebugMode)
 						//	Debug.Log("KK: StaticDatabase.updateCache(): dist is " + dist.ToString() + " to " + group.groupName);
-						
+
 						Boolean bGroupIsClose = dist < group.visibilityRange;
                         Log.Debug("StaticDatabase.updateCache(): group visrange is " + group.visibilityRange.ToString() + " for " + group.groupName);
-						
+
 						if (!bGroupIsClose)
 						{
                             Log.Debug("StaticDatabase.updateCache(): Group is not close. cacheAll()  " + group.groupName);
 							group.CacheAll();
 						}
-						
+
 						group.active = bGroupIsClose;
 					}
 					else
@@ -364,7 +358,6 @@ namespace KerbalKonstructs.Core
             if (modelList.ContainsKey(name))
             {
                 Log.UserInfo("duplicate model name: " + name + " ,found in: "  + model.configPath + " . This might be OK.");
-                return;
             }
             else
             {
@@ -381,7 +374,7 @@ namespace KerbalKonstructs.Core
             }
             else
             {
-                return modelList[name];   
+                return modelList[name];
             }
         }
 

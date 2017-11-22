@@ -56,7 +56,7 @@ namespace KerbalKonstructs.Core
 
         internal float refLon;
         internal float refLat;
-        internal float refAlt;
+        internal double refAlt;
         internal CelestialBody body;
 
         internal StaticInstance parentInstance;
@@ -88,7 +88,7 @@ namespace KerbalKonstructs.Core
 
             if (! string.IsNullOrEmpty(LaunchSiteIcon))
             {
-                
+
                 icon = GameDatabase.Instance.GetTexture(LaunchSiteIcon, false);
 
                 if (icon == null)
@@ -98,7 +98,7 @@ namespace KerbalKonstructs.Core
 
             refLon = (float)Math.Round(KKMath.GetLongitudeInDeg(launchSite.parentInstance.RadialPosition), 2);
             refLat = (float)Math.Round(KKMath.GetLatitudeInDeg(launchSite.parentInstance.RadialPosition), 2);
-          
+
             refAlt = launchSite.parentInstance.RadiusOffset;
 
 

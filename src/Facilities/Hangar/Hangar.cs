@@ -8,29 +8,21 @@ namespace KerbalKonstructs.Modules
 {
     class Hangar : KKFacility
     {
-        [CareerSetting]
-        public string InStorage1 = "";
-        [CareerSetting]
-        public string InStorage2 = "";
-        [CareerSetting]
-        public string InStorage3 = "";
+        [CareerSetting] public string InStorage1 = "";
+        [CareerSetting] public string InStorage2 = "";
+        [CareerSetting] public string InStorage3 = "";
 
-
-        [CFGSetting]
-        public float FacilityMassCapacity;
-        [CFGSetting]
-        public int FacilityCraftCapacity;
+        [CFGSetting] public float FacilityMassCapacity;
+        [CFGSetting] public int FacilityCraftCapacity;
 
         internal static void DoHangaredCraftCheck()
         {
             foreach (StaticInstance instance in StaticDatabase.allStaticInstances)
             {
 
-
                 if (instance.facilityType == KKFacilityType.Hangar)
                 {
                     Hangar thisHanar = instance.gameObject.GetComponent<Hangar>();
-
 
                     string sInStorage = thisHanar.InStorage1;
                     string sInStorage2 = thisHanar.InStorage2;

@@ -28,11 +28,11 @@ namespace KerbalKonstructs.UI
             if (sFacilityType == "Research")
             {
                 facField = typeof(Research);
-            }else
+            }
+			else
             {
                 facField = typeof(Business);
             }
-            Barracks allFacs = selectedFacility.myFacilities[0] as Barracks;
             Research myResearch = selectedFacility.myFacilities[0] as Research;
             //if (sFacilityType == "Research")
             Business myBusiness = selectedFacility.myFacilities[0] as Business;
@@ -196,7 +196,7 @@ namespace KerbalKonstructs.UI
 						Funding.Instance.AddFunds((double)fCurrent, TransactionReasons.Cheating);
                         myBusiness.FundsOCurrent = 0f;
 					}
-				}				
+				}
 
 				GUILayout.Space(5);
 				GUILayout.BeginHorizontal();

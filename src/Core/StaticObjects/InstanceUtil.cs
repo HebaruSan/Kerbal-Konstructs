@@ -72,24 +72,20 @@ namespace KerbalKonstructs.Core
                 GameObject.Destroy(destBuilding);
             }
 
-
         }
 
         internal static void SetActiveRecursively(StaticInstance instance, bool active)
         {
-            
+
             if (instance.isActive != active)
             {
                 instance.isActive = active;
 
-
-                
                 foreach (StaticModule module in instance.gameObject.GetComponents<StaticModule>())
                     module.StaticObjectUpdate();
 
-
                 instance.gameObject.SetActive(active);
-                
+
                 var transforms = instance.gameObject.GetComponentsInChildren<Transform>(true);
                 for (int i = 0; i < transforms.Length; i++)
                 {
@@ -99,5 +95,3 @@ namespace KerbalKonstructs.Core
         }
     }
 }
-
-

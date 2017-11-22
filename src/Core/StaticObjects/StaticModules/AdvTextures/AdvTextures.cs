@@ -25,8 +25,6 @@ namespace KerbalKonstructs
         public string _SpecGlossMap = null;     // U5 metallic (standard shader - spec gloss setup)
 
 
-
-
         public void Start()
         {
             foreach (MeshRenderer renderer in gameObject.GetComponentsInChildren<MeshRenderer>(true))

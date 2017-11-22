@@ -13,7 +13,6 @@ namespace KerbalKonstructs.Core
     {
         private static List<LaunchSite> launchSites = new List<LaunchSite>();
         private static string currentLaunchSite = "Runway";
-        private static Texture defaultLaunchSiteLogo = GameDatabase.Instance.GetTexture("KerbalKonstructs/Assets/DefaultSiteLogo", false);
         public static float rangeNearestOpenBase = 0f;
         public static string nearestOpenBase = "";
         public static float rangeNearestBase = 0f;
@@ -205,7 +204,7 @@ namespace KerbalKonstructs.Core
                     updateSitesMI.Invoke(PSystemSetup.Instance, null);
 
                 if (site.parentInstance.gameObject != null)
-                {                    
+                {
                     CustomSpaceCenter.CreateFromLaunchsite(site);
                 }
             }
@@ -227,7 +226,7 @@ namespace KerbalKonstructs.Core
                 {
                     SpaceCenterManager.spaceCenters.Remove(csc);
                 }
-            } 
+            }
         }
 
 

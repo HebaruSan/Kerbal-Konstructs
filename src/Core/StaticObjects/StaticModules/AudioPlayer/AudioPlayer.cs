@@ -12,8 +12,8 @@ namespace KerbalKonstructs
     {
 
         public string audioClip;
-        public float minDistance = 1;
-        public float maxDistance = 500;
+        public double minDistance = 1;
+        public double maxDistance = 500;
         public bool loop = true;
         public float volume = 1;
         AudioSource audioPlayer = null;
@@ -28,13 +28,13 @@ namespace KerbalKonstructs
                 return;
             }
 
-            float scale = InstanceUtil.GetStaticInstanceForGameObject(gameObject).ModelScale;
+            double scale = InstanceUtil.GetStaticInstanceForGameObject(gameObject).ModelScale;
 
 
             audioPlayer = gameObject.AddComponent<AudioSource>();
             audioPlayer.clip = soundFile;
-            audioPlayer.minDistance = minDistance * scale;
-            audioPlayer.maxDistance = maxDistance * scale;
+            audioPlayer.minDistance = (float) (minDistance * scale);
+            audioPlayer.maxDistance = (float) (maxDistance * scale);
             audioPlayer.loop = loop;
             audioPlayer.volume = volume * KerbalKonstructs.soundMasterVolume;
             audioPlayer.playOnAwake = true;
@@ -47,9 +47,9 @@ namespace KerbalKonstructs
         {
             if (audioPlayer != null)
             {
-                float scale = InstanceUtil.GetStaticInstanceForGameObject(gameObject).ModelScale;
-                audioPlayer.minDistance = minDistance * scale;
-                audioPlayer.maxDistance = maxDistance * scale;
+                double scale = InstanceUtil.GetStaticInstanceForGameObject(gameObject).ModelScale;
+                audioPlayer.minDistance = (float) (minDistance * scale);
+                audioPlayer.maxDistance = (float) (maxDistance * scale);
             }
         }
     }

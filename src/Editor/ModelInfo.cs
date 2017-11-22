@@ -28,47 +28,47 @@ namespace KerbalKonstructs.UI
 
         public double dUpdater = 0;
 
-        Rect StaticInfoRect = new Rect(300, 50, 320, 620);
+        private Rect StaticInfoRect = new Rect(300, 50, 320, 620);
 
         public Boolean displayingInfo = false;
         public Boolean bCycle = true;
         public Boolean bSpinning = true;
         public Boolean bChangeFacilityType = false;
 
-        GUIStyle DeadButton;
-        GUIStyle DeadButtonRed;
-        GUIStyle KKWindow;
-        GUIStyle BoxNoBorder;
-        GUIStyle BoxNoBorder2;
-        GUIStyle LabelGreen;
-        GUIStyle LabelWhite;
+        private GUIStyle DeadButton;
+        private GUIStyle DeadButtonRed;
+        private GUIStyle KKWindow;
+        private GUIStyle BoxNoBorder;
+        private GUIStyle BoxNoBorder2;
+        private GUIStyle LabelGreen;
+        private GUIStyle LabelWhite;
 
-        Vector2 facilityscroll;
+        private Vector2 facilityscroll;
 
-        String infTitle = "";
-        String infMesh = "";
-        String infCost = "";
-        String infAuthor = "";
-        String infManufacturer = "";
-        String infDescription = "";
-        String infCategory = "";
-        String infLaunchTransform = "";
+        private String infTitle = "";
+        private String infMesh = "";
+        private String infCost = "";
+        private String infAuthor = "";
+        private String infManufacturer = "";
+        private String infDescription = "";
+        private String infCategory = "";
+        private String infLaunchTransform = "";
 
-        String infLaunchLength = "";
-        String infLaunchWidth = "";
-        String infFacType = "";
-        String infFacMassCap = "";
-        String infFacCraftCap = "";
-        String infStaffMax = "";
-        String infLqFMax = "";
-        String infOxFMax = "";
-        String infMoFMax = "";
+        private String infLaunchLength = "";
+        private String infLaunchWidth = "";
+        private String infFacType = "";
+        private String infFacMassCap = "";
+        private String infFacCraftCap = "";
+        private String infStaffMax = "";
+        private String infLqFMax = "";
+        private String infOxFMax = "";
+        private String infMoFMax = "";
         //		String infECMax = "";
         //		String infOreMax = "";
         //		String infPrOreMax = "";
-        String infProdRateMax = "";
-        String infScienceMax = "";
-        String infFundsMax = "";
+        private String infProdRateMax = "";
+        private String infScienceMax = "";
+        private String infFundsMax = "";
 
         public StaticModel mModel = null;
         public StaticInstance lastPreview = null;
@@ -212,7 +212,7 @@ namespace KerbalKonstructs.UI
             GUILayout.Box(tHorizontalSep, BoxNoBorder, GUILayout.Height(4));
             GUILayout.Space(1);
 
-            if (! string.IsNullOrEmpty(infLaunchTransform))
+            if (!string.IsNullOrEmpty(infLaunchTransform))
             {
                 GUILayout.Box("DefaultLaunchPadTransform", BoxNoBorder, GUILayout.Height(19));
                 GUILayout.Box("" + infLaunchTransform, BoxNoBorder2);
@@ -482,11 +482,8 @@ namespace KerbalKonstructs.UI
                     if (GUILayout.Button("Stop Spin", GUILayout.Height(23), GUILayout.Width(120)))
                         bSpinning = false;
                 }
-                else
-                {
-                    if (GUILayout.Button("Resume Spin", GUILayout.Height(23), GUILayout.Width(120)))
-                        bSpinning = true;
-                }
+                else if (GUILayout.Button("Resume Spin", GUILayout.Height(23), GUILayout.Width(120)))
+                    bSpinning = true;
 
                 GUILayout.EndHorizontal();
             }
@@ -570,22 +567,16 @@ namespace KerbalKonstructs.UI
         {
             if (soInstance != null)
             {
-                if (currPreview != null)
-                {
-                    if (currPreview == soInstance)
-                        currPreview = null;
-                }
+                if (currPreview != null && currPreview == soInstance)
+                    currPreview = null;
 
                 KerbalKonstructs.instance.deleteObject(soInstance);
 
             }
-            else
+            else if (currPreview != null)
             {
-                if (currPreview != null)
-                {
-                    KerbalKonstructs.instance.deleteObject(currPreview);
-                    currPreview = null;
-                }
+                KerbalKonstructs.instance.deleteObject(currPreview);
+                currPreview = null;
             }
         }
 

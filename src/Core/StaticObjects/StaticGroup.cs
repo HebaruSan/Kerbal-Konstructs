@@ -13,8 +13,8 @@ namespace KerbalKonstructs.Core
 		public String bodyName;
 
 		public List<StaticInstance> groupInstances = new List<StaticInstance>();
-		public Vector3 centerPoint = Vector3.zero;
-		public float visibilityRange = 0;
+		public Vector3d centerPoint = Vector3.zero;
+		public double visibilityRange = 0;
 		public Boolean alwaysActive = false;
 		public Boolean active = false;
 		public Boolean bLiveUpdate = false;
@@ -24,7 +24,7 @@ namespace KerbalKonstructs.Core
 			groupName = name;
 			bodyName = body;
 			centerPoint = Vector3.zero;
-			visibilityRange = 0f; 
+			visibilityRange = 0f;
 		}
 
 		public void AddStatic(StaticInstance obj)
@@ -41,21 +41,18 @@ namespace KerbalKonstructs.Core
 
         public void UpdateCacheSettings()
         {
-            float highestVisibility = 0;
-            float furthestDist = 0;
+            double highestVisibility = 0;
+            double furthestDist = 0;
 
             centerPoint = Vector3.zero;
             StaticInstance soCenter = null;
             Vector3 vRadPos = Vector3.zero;
-
 
             // FIRST ONE IS THE CENTER
             centerPoint = groupInstances[0].gameObject.transform.position;
             vRadPos = (Vector3)groupInstances[0].RadialPosition;
             groupInstances[0].GroupCenter = "true";
             soCenter = groupInstances[0];
-
-
 
             for (int i = 0; i < groupInstances.Count; i++)
             {
@@ -98,9 +95,8 @@ namespace KerbalKonstructs.Core
         /// <param name="playerPos"></param>
 		public void UpdateCache(Vector3 playerPos)
 		{
-            float dist = 0f;
+            double dist = 0;
             bool visible = false;
-
 
             foreach (StaticInstance instance in groupInstances)
 			{
@@ -109,55 +105,49 @@ namespace KerbalKonstructs.Core
 
 				string sFacType = instance.FacilityType;
 
-				if (sFacType == "Hangar")
-				{
-					if (visible) HangarGUI.CacheHangaredCraft(instance);
-				}
+				if (sFacType == "Hangar" && visible)
+					HangarGUI.CacheHangaredCraft(instance);
 
 				if (sFacType == "LandingGuide")
 				{
-					if (visible) LandingGuideUI.instance.drawLandingGuide(instance);
+					if (visible)
+						LandingGuideUI.instance.drawLandingGuide(instance);
 					else
                         LandingGuideUI.instance.drawLandingGuide(null);
 				}
 
 				if (sFacType == "TouchdownGuideL")
 				{
-					if (visible) LandingGuideUI.instance.drawTouchDownGuideL(instance);
+					if (visible)
+						LandingGuideUI.instance.drawTouchDownGuideL(instance);
 					else
                         LandingGuideUI.instance.drawTouchDownGuideL(null);
 				}
 
 				if (sFacType == "TouchdownGuideR")
 				{
-					if (visible) LandingGuideUI.instance.drawTouchDownGuideR(instance);
+					if (visible)
+						LandingGuideUI.instance.drawTouchDownGuideR(instance);
 					else
                         LandingGuideUI.instance.drawTouchDownGuideR(null);
 				}
 
-				if (sFacType == "CityLights")
+				if (sFacType == "CityLights" && dist < 65000)
 				{
-					if (dist < 65000f)
-					{
-                        InstanceUtil.SetActiveRecursively(instance, false);
-						return;
-					}
-				}
-			
-				if (visible)
-                    InstanceUtil.SetActiveRecursively(instance, true);
-				else
                     InstanceUtil.SetActiveRecursively(instance, false);
+					return;
+				}
+
+                InstanceUtil.SetActiveRecursively(instance, visible);
 			}
 		}
-
 
 		public Vector3 getCenter()
 		{
 			return centerPoint;
 		}
 
-		public float getVisibilityRange()
+		public double getVisibilityRange()
 		{
 			return visibilityRange;
 		}

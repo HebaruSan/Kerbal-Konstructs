@@ -16,31 +16,23 @@ namespace KerbalKonstructs.UI
                 if (_instance == null)
                 {
                     _instance = new FacilityManager();
-
                 }
                 return _instance;
             }
         }
 
-
-        Rect targetSelectorRect = new Rect(640, 120, 220, 420);
         public static Rect facilityManagerRect = new Rect(150, 75, 320, 670);
 
         public Texture tHorizontalSep = GameDatabase.Instance.GetTexture("KerbalKonstructs/Assets/horizontalsep3", false);
 
-        //		public Vector2 descriptionScrollPosition;
-        //		public Vector2 scrollNearbyCraft;
-        //		public Vector2 scrollOreTransfer;
-        //		public Vector2 scrollOreTransfer2;
-
         public static LaunchSite selectedSite = null;
         public static StaticInstance selectedFacility = null;
 
-        float fLqFMax = 0;
-        float fOxFMax = 0;
-        float fMoFMax = 0;
+        private float fLqFMax = 0;
+        private float fOxFMax = 0;
+        private float fMoFMax = 0;
 
-        float fAlt = 0f;
+        private double fAlt = 0f;
 
         public Boolean isOpen2 = false;
         public Boolean bChangeTargetType = false;
@@ -51,23 +43,21 @@ namespace KerbalKonstructs.UI
         public Boolean bTransferOreToF = false;
         public Boolean bTransferOreToC = false;
 
-        string sFacilityName = "Unknown";
-        string sFacilityType = "Unknown";
+        private string sFacilityName = "Unknown";
+        private string sFacilityType = "Unknown";
 
-        // string sOreTransferAmount = "0";
+        private Vector3 objectPos = new Vector3(0, 0, 0);
 
-        Vector3 objectPos = new Vector3(0, 0, 0);
+        private double disObjectLat = 0;
+        private double disObjectLon = 0;
 
-        double disObjectLat = 0;
-        double disObjectLon = 0;
-
-        GUIStyle Yellowtext;
-        GUIStyle KKWindow;
-        GUIStyle DeadButton;
-        GUIStyle DeadButtonRed;
-        GUIStyle BoxNoBorder;
-        GUIStyle LabelInfo;
-        GUIStyle ButtonSmallText;
+        private GUIStyle Yellowtext;
+        private GUIStyle KKWindow;
+        private GUIStyle DeadButton;
+        private GUIStyle DeadButtonRed;
+        private GUIStyle BoxNoBorder;
+        private GUIStyle LabelInfo;
+        private GUIStyle ButtonSmallText;
 
 
         public override void Close()
@@ -85,8 +75,6 @@ namespace KerbalKonstructs.UI
                     KerbalKonstructs.instance.deselectObject(true, true);
             }
 
-
-            StaticInstance soObject = KerbalKonstructs.instance.selectedObject;
             KKWindow = new GUIStyle(GUI.skin.window);
             KKWindow.padding = new RectOffset(3, 3, 5, 5);
 
@@ -109,7 +97,6 @@ namespace KerbalKonstructs.UI
             }
 
             facilityManagerRect = GUI.Window(0xB01B2B5, facilityManagerRect, drawFacilityManagerWindow, "", KKWindow);
-
         }
 
         void drawFacilityManagerWindow(int windowID)
@@ -205,10 +192,6 @@ namespace KerbalKonstructs.UI
                 fAlt = selectedFacility.RadiusOffset;
 
                 objectPos = KerbalKonstructs.instance.getCurrentBody().transform.InverseTransformPoint(selectedFacility.gameObject.transform.position);
-                //dObjectLat = NavUtils.GetLatitude(ObjectPos);
-                //dObjectLon = NavUtils.GetLongitude(ObjectPos);
-                //disObjectLat = dObjectLat * 180 / Math.PI;
-                //disObjectLon = dObjectLon * 180 / Math.PI;
                 disObjectLat = KKMath.GetLatitudeInDeg(objectPos);
                 disObjectLon = KKMath.GetLongitudeInDeg(objectPos);
 
@@ -235,44 +218,36 @@ namespace KerbalKonstructs.UI
                     sPurpose = "Craft can be stored in this building for launching from the base at a later date. The building has limited space.";
                     bHalfwindow = true;
                 }
-                else
-                if (sFacilityType == "Barracks")
+                else if (sFacilityType == "Barracks")
                 {
                     sPurpose = "This facility provides a temporary home for base-staff. Other facilities can draw staff from the pool available at this facility.";
                     bHalfwindow = true;
                 }
-                else
-                if (sFacilityType == "RadarStation")
+                else if (sFacilityType == "RadarStation")
                 {
                     sPurpose = "This facility tracks craft in the planet's atmosphere at a limited range. It provides bonuses for recovery operations by the nearest open base.";
                     bHalfwindow = true;
                 }
-                else
-                if (sFacilityType == "Research")
+                else if (sFacilityType == "Research")
                 {
                     sPurpose = "This facility carries out research and generates Science.";
                     bHalfwindow = true;
-                }             
-                
-                else
-                if (sFacilityType == "Business")
+                }
+                else if (sFacilityType == "Business")
                 {
                     sPurpose = "This facility carries out business related to the space program in order to generate Funds.";
                     bHalfwindow = true;
                 }
-                else
-                if (sFacilityType == "TrackingStation")
+                else if (sFacilityType == "TrackingStation")
                 {
                     sPurpose = "Thís Facility can be a GroundStation for RemoteTech/CommNet";
                     bHalfwindow = true;
                 }
-                else
-                if (sFacilityType == "FuelTanks")
+                else if (sFacilityType == "FuelTanks")
                 {
                     sPurpose = "This facility stores fuel for craft.";
                     bHalfwindow = false;
                 }
-
 
                 GUILayout.Label(sPurpose, LabelInfo);
                 GUILayout.Space(2);
@@ -282,7 +257,6 @@ namespace KerbalKonstructs.UI
                 SharedInterfaces.OpenCloseFacility(selectedFacility);
 
                 isOpen2 = selectedFacility.myFacilities[0].isOpen;
-
 
                 GUILayout.Space(2);
                 GUILayout.Box(tHorizontalSep, BoxNoBorder, GUILayout.Height(4));

@@ -40,15 +40,13 @@ namespace KerbalKonstructs.UI
         // it might be worth the work to move these, and their associated
         // updater methods, to a new class with one global instance for the whole
         // mod.  Until then it's not that much of an extra cost:
-        private Vector3 shipCenterCoords;
+        private Vector3d shipCenterCoords;
 
-        private Vector3 camPos;         // camera coordinates.
+        private Vector3d camPos;         // camera coordinates.
         private Vector3 camLookVec;     // vector from camera to ship position.
         private Vector3 prevCamLookVec;
         private Quaternion camRot;
         private Quaternion prevCamRot;
-        private bool isOnMap; // true = Map view, false = Flight view.
-        private bool prevIsOnMap;
         private const int MAP_LAYER = 10; // found through trial-and-error
         private const int FLIGHT_LAYER = 15; // Supposedly the layer for UI effects in flight camera.
 
@@ -70,8 +68,8 @@ namespace KerbalKonstructs.UI
         /// </summary>
         public void draw()
         {
-            if (line == null || hat == null) return;
-            if (!enable) return;
+            if (line == null || hat == null || !enable)
+                return;
 
             GetCamData();
             GetShipCenterCoords();
@@ -91,8 +89,6 @@ namespace KerbalKonstructs.UI
             }
         }
 
-
-
         /// <summary>
         /// Update _shipCenterCoords, abstracting the different ways to do
         /// it depending on view mode:
@@ -108,11 +104,8 @@ namespace KerbalKonstructs.UI
         /// </summary>
         private void GetCamData()
         {
-            prevIsOnMap = isOnMap;
             prevCamLookVec = camLookVec;
             prevCamRot = camRot;
-
-            isOnMap = MapView.MapIsEnabled;
 
             var cam = FlightCamera.fetch.mainCamera;
             camPos = cam.transform.localPosition;
@@ -322,4 +315,3 @@ namespace KerbalKonstructs.UI
 
     }
 }
-

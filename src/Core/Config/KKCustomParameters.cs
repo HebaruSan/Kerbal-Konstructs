@@ -65,7 +65,7 @@ namespace KerbalKonstructs.Core
         [GameParameters.CustomFloatParameterUI("Default recovery factor" , toolTip = "How good is KK base at recovering a vessel, this might be overwritten the bases configuration" , minValue = 0 , maxValue = 100 , autoPersistance = true)]
         public float defaultRecoveryFactor = 50;
         [GameParameters.CustomFloatParameterUI("Default recovery range", toolTip = "until which distance should a base be able to recover a vessel, this might be overwritten the bases configuration",  minValue = 0, maxValue = 500000, stepCount = 100, autoPersistance = true)]
-        public float defaultEffectiveRange = 100000;
+        public double defaultEffectiveRange = 100000;
 
         // misc settings
         [GameParameters.CustomStringParameterUI("", title = "", lines = 1)]
@@ -136,7 +136,7 @@ namespace KerbalKonstructs.Core
         public string blank1 = "";
         // editor settings
         [GameParameters.CustomFloatParameterUI("Maximum editor local range", minValue = 5000, maxValue = 200000, stepCount = 100, autoPersistance = true)]
-        public float maxEditorVisRange = 100000;
+        public double maxEditorVisRange = 100000;
         [GameParameters.CustomParameterUI("Spawn preview models", toolTip = "just leave this to true", autoPersistance = true)]
         public bool spawnPreviewModels = true;
         [GameParameters.CustomParameterUI("Use alterative editor camera", toolTip = "Use the legacy KK editor camera, which can go under the surface", autoPersistance = true)]
@@ -177,8 +177,6 @@ namespace KerbalKonstructs.Core
     {
         private static KKCustomParameters2 _instance;
 
-
-
         public static KKCustomParameters2 instance
         {
             get
@@ -203,17 +201,10 @@ namespace KerbalKonstructs.Core
 		public override int SectionOrder { get { return 2; } }
         public override bool HasPresets { get { return false; } }
 
-
-
-
         [GameParameters.CustomParameterUI("Launch from any Site", toolTip = "With this set to true you could launch a plane from the SHP on a rocket launchpad. or vice versa", autoPersistance = true)]
         public bool launchFromAnySite = false;
         [GameParameters.CustomParameterUI("Open everything", toolTip = "Use every base and facility without paying money", autoPersistance = true, gameMode = GameParameters.GameMode.CAREER)]
         public bool disableCareerStrategyLayer = false;
-
-
-
-
 
     }
 

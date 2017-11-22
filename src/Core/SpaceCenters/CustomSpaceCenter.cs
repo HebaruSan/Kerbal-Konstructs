@@ -31,7 +31,7 @@ namespace KerbalKonstructs.Core
 
         public SpaceCenter spaceCenter
         {
-         get
+            get
             {
                 return getSpaceCenter();
             }
@@ -46,11 +46,11 @@ namespace KerbalKonstructs.Core
                 _spaceCenter.cb = staticInstance.CelestialBody;
                 _spaceCenter.name = SpaceCenterName;
                 _spaceCenter.AreaRadius = 3000;
-//                _spaceCenter.spaceCenterAreaTrigger = new Collider();
+                //_spaceCenter.spaceCenterAreaTrigger = new Collider();
 
                 _spaceCenter.SpaceCenterTransform = staticInstance.gameObject.transform;
 
-                Log.Normal("SpaceCenter Position: " + _spaceCenter.SpaceCenterTransform); 
+                Log.Normal("SpaceCenter Position: " + _spaceCenter.SpaceCenterTransform);
 
 
                 FieldInfo Latitude = _spaceCenter.GetType().GetField("latitude", BindingFlags.NonPublic | BindingFlags.Instance);

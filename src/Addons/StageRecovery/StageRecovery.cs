@@ -47,7 +47,6 @@ namespace KerbalKonstructs.Addons
                         // ASH Get openclosestate of launchsite with same name as space centre
                         openCloseState = csc.staticInstance.launchSite.OpenCloseState;
 
-                        StaticInstance myBase = csc.staticInstance;
                         if (csc.staticInstance.launchSite.RecoveryFactor == 0) continue;
                         spaceCenter = csc.getSpaceCenter();
                         dist = spaceCenter.GreatCircleDistance(spaceCenter.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
@@ -100,7 +99,7 @@ namespace KerbalKonstructs.Addons
                     // Put the KSC back as the Space Centre
                     // Not needed as it is buggy in the moment
                     Log.Debug("Resetting SpaceCenter to KSC");
-                    SpaceCenter.Instance = SpaceCenterManager.KSC;  
+                    SpaceCenter.Instance = SpaceCenterManager.KSC;
                 }
             }
         }

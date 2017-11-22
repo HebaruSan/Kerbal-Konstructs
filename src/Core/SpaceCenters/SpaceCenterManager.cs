@@ -31,7 +31,7 @@ namespace KerbalKonstructs.Core
             return null;
         }
 
-        public static void getClosestSpaceCenter(Vessel vessel, out SpaceCenter closestCenter, out float closestDistance, 
+        public static void getClosestSpaceCenter(Vessel vessel, out SpaceCenter closestCenter, out float closestDistance,
 			out float RecoveryFactor, out float RecoveryRange, out string BaseName)
 		{
 			CustomSpaceCenter closest = null;
@@ -45,7 +45,6 @@ namespace KerbalKonstructs.Core
 			string sBaseName = "";
 			float fMyBaseRecovFact = 0f;
 			float fMyBaseRecovRang = 0f;
-
 
             foreach (CustomSpaceCenter csc in spaceCenters)
 			{
@@ -69,9 +68,7 @@ namespace KerbalKonstructs.Core
 				}
 			}
 
-			
-
-			if (closest == null) 
+			if (closest == null)
 				sc = null;
 			else
 			{
@@ -83,7 +80,8 @@ namespace KerbalKonstructs.Core
             Log.Normal("returning closest space centre: " + sc.name);
 
 
-			if (smallestDist < 1) smallestDist = 0;
+			if (smallestDist < 1)
+				smallestDist = 0;
 			if (sc == null)
 			{
 				sc = KSC;

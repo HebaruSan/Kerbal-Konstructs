@@ -63,9 +63,6 @@ namespace KerbalKonstructs.UI
 
             FuelTanks myTank = selectedObject.myFacilities[0] as FuelTanks;
 
-            string sFacilityName = selectedObject.model.title;
-            string sFacilityRole = selectedObject.FacilityType;
-
             string sResource1 = "LiquidFuel";
             string sResource2 = "Oxidizer";
             string sResource3 = "MonoPropellant";

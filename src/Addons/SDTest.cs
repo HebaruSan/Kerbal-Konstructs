@@ -43,14 +43,12 @@ namespace KerbalKonstructs.Addons
         private static void ScanGroups()
         {
             string group = "";
-            string key = "";
 
             group2Center.Add("KSCUpgrades", new Vector3(157000, -1000, -570000) ) ;
 
             foreach (StaticInstance instance in StaticDatabase.allStaticInstances )
             {
                 group = (string)instance.Group;
-                key = instance.RadialPosition.ToString();
 
                 switch (group)
                 {
@@ -64,7 +62,7 @@ namespace KerbalKonstructs.Addons
                         {
                             group2Center.Add(group, Vector3.zero);
                         }
-                        int count = (groupMembers.ContainsKey(group)) ? groupMembers[group].Count : 0; 
+                        int count = (groupMembers.ContainsKey(group)) ? groupMembers[group].Count : 0;
                         group2Center[group] = group2Center[group] * count/(count+1) + instance.RadialPosition/(count + 1) ;
                         break;
                 }
@@ -116,8 +114,6 @@ namespace KerbalKonstructs.Addons
 
         public static void GetShaderStats()
         {
-            List<Shader> myshaders = new List<Shader>();
-
             foreach (StaticModel model in StaticDatabase.allStaticModels)
             {
                 foreach (var renderer in model.prefab.GetComponentsInChildren<Renderer>(true))
@@ -226,7 +222,7 @@ namespace KerbalKonstructs.Addons
             return myTexture2D;
 
 
-        } 
+        }
 
     }
 }

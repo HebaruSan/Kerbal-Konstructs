@@ -69,7 +69,8 @@ namespace KerbalKonstructs.UI
 
         public void drawTouchDownGuideL(StaticInstance obj)
         {
-            if (!IsOpen()) { return; }
+            if (!IsOpen())
+                return;
             if (obj == null)
             {
                 vTDL = Vector3.zero;
@@ -77,7 +78,8 @@ namespace KerbalKonstructs.UI
             }
 
             vesCraft = FlightGlobals.ActiveVessel;
-            if (vesCraft == null) return;
+            if (vesCraft == null)
+                return;
 
             vTDL = Camera.main.WorldToScreenPoint(obj.gameObject.transform.position);
             soTDL = obj;
@@ -85,7 +87,8 @@ namespace KerbalKonstructs.UI
 
         public void drawTouchDownGuideR(StaticInstance obj)
         {
-            if (!IsOpen()) { return; }
+            if (!IsOpen())
+                return;
             if (obj == null)
             {
                 vTDR = Vector3.zero;
@@ -93,7 +96,8 @@ namespace KerbalKonstructs.UI
             }
 
             vesCraft = FlightGlobals.ActiveVessel;
-            if (vesCraft == null) return;
+            if (vesCraft == null)
+                return;
 
             vTDR = Camera.main.WorldToScreenPoint(obj.gameObject.transform.position);
             soTDR = obj;
@@ -101,7 +105,8 @@ namespace KerbalKonstructs.UI
 
         public void drawLandingGuide(StaticInstance obj)
         {
-            if (!IsOpen()) { return; }
+            if (!IsOpen())
+                return;
             if (obj == null)
             {
                 vLineStart = Vector3.zero;
@@ -110,7 +115,8 @@ namespace KerbalKonstructs.UI
             }
 
             vesCraft = FlightGlobals.ActiveVessel;
-            if (vesCraft == null) return;
+            if (vesCraft == null)
+                return;
 
             Log.Debug("KK: drawLandingGuide");
 
@@ -123,15 +129,13 @@ namespace KerbalKonstructs.UI
         void drawLandingGuides()
         {
             Vessel vesCraft = FlightGlobals.ActiveVessel;
-            if (vesCraft == null) return;
-            if (soLandingGuide == null) return;
+            if (vesCraft == null || soLandingGuide == null) return;
 
             Vector3 vlgPos = soLandingGuide.gameObject.transform.position;
             Vector3 vcrPos = vesCraft.transform.position;
             float fDist = Vector3.Distance(vlgPos, vcrPos);
 
-            if (fDist > 15000) return;
-            if (fDist < 3) return;
+            if (fDist > 15000 || fDist < 3) return;
 
             float flgWscale = 1f;
             float flgHscale = 1f;

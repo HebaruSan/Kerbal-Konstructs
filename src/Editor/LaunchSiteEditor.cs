@@ -30,9 +30,6 @@ namespace KerbalKonstructs.UI
 
 		#region Variable Declarations
 
-		private List<Transform> transformList = new List<Transform>();
-        private CultureInfo culture = new CultureInfo ("en-US");
-
         #region GUI Windows
         // GUI Windows
         Rect siteEditorRect = new Rect(400, 45, 360, 625);
@@ -51,11 +48,6 @@ namespace KerbalKonstructs.UI
         GUIStyle BoxNoBorder;
 
         SiteType siteType;
-        GUIContent[] siteTypeOptions = {
-                                            new GUIContent("VAB"),
-                                            new GUIContent("SPH"),
-                                            new GUIContent("ANY")
-                                        };
         // ComboBox siteTypeMenu;
         #endregion
 
@@ -71,40 +63,7 @@ namespace KerbalKonstructs.UI
         internal String siteName, siteTrans, siteDesc, siteAuthor, siteCategory, siteHidden, ILSActive;
         float flOpenCost, flCloseValue, flRecoveryFactor, flRecoveryRange, flLaunchRefund, flLength, flWidth;
 
-
-
-        Vector3 vbsnapangle1 = new Vector3(0, 0, 0);
-        Vector3 vbsnapangle2 = new Vector3(0, 0, 0);
-
-        Vector3 snapSourceWorldPos = new Vector3(0, 0, 0);
-        Vector3 snapTargetWorldPos = new Vector3(0, 0, 0);
-
-
         internal StaticInstance snapTargetInstance = null;
-
-
-        private Vector3 snpspos = new Vector3(0, 0, 0);
-        private Vector3 snptpos = new Vector3(0, 0, 0);
-        private Vector3 vDrift = new Vector3(0, 0, 0);
-        private Vector3 vCurrpos = new Vector3(0, 0, 0);
-
-        private VectorRenderer upVR = new VectorRenderer();
-        private VectorRenderer fwdVR = new VectorRenderer();
-        private VectorRenderer rightVR = new VectorRenderer();
-
-        private VectorRenderer northVR = new VectorRenderer();
-        private VectorRenderer eastVR = new VectorRenderer();
-
-
-
-
-        private static Vector3d position = Vector3d.zero;
-        private Vector3d referenceVector = Vector3d.zero;
-        private Vector3 orientation = Vector3.zero;
-
-
-        private static float vis = 0;
-
 
         private bool guiInitialized = false;
 
@@ -173,12 +132,12 @@ namespace KerbalKonstructs.UI
                 guiInitialized = true;
             }
             if (obj != null)
-            { 
+            {
 
 
                 siteEditorRect = GUI.Window(0xB00B1E4, siteEditorRect, drawLaunchSiteEditorWindow, "", KKWindows);
-                    
-                
+
+
             }
         }
 
@@ -538,7 +497,7 @@ namespace KerbalKonstructs.UI
         #endregion
 
         #region Utility Functions
- 
+
 
         /// <summary>
         /// Updates the Window Strings to the new settings
@@ -548,8 +507,6 @@ namespace KerbalKonstructs.UI
         {
             selectedObject = instance;
 
-
-            vis = instance.VisibilityRange;
             facType = instance.FacilityType;
 
             if (facType == null || facType == "")
@@ -613,8 +570,6 @@ namespace KerbalKonstructs.UI
             }
             else
             {
-                string sModelDesc = selectedObject.model.description;
-
                 // Edit or make a launchsite
                 siteName = selectedObject.gameObject.name;
                 siteTrans = selectedObject.model.DefaultLaunchPadTransform;

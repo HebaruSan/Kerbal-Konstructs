@@ -40,10 +40,6 @@ namespace KerbalKonstructs.Modules
         public Boolean bHideOccluded = false;
         public Boolean bHideOccluded2 = false;
 
-
-        Vector3 ObjectPos = new Vector3(0, 0, 0);
-
-
         public override void Draw()
         {
             if (MapView.MapIsEnabled)

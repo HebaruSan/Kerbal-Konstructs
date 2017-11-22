@@ -24,7 +24,7 @@ namespace KerbalKonstructs
     public class KerbalKonstructs : MonoBehaviour
     {
         // Hello
-        internal static KerbalKonstructs instance;       
+        internal static KerbalKonstructs instance;
 
         internal static readonly string sKKVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
 
@@ -56,7 +56,7 @@ namespace KerbalKonstructs
         #endregion
 
 
-        #region Configurable Variables    
+        #region Configurable Variables
         internal bool enableRT
         {
             get
@@ -95,10 +95,10 @@ namespace KerbalKonstructs
         internal double facilityUseRange { get { return (double)HighLogic.CurrentGame.Parameters.CustomParams<KKCustomParameters0>().facilityUseRange; } set { HighLogic.CurrentGame.Parameters.CustomParams<KKCustomParameters0>().facilityUseRange = (float)value; } }
         internal bool disableRemoteRecovery { get { return HighLogic.CurrentGame.Parameters.CustomParams<KKCustomParameters0>().disableRemoteRecovery; } set { HighLogic.CurrentGame.Parameters.CustomParams<KKCustomParameters0>().disableRemoteRecovery = value; } }
         internal double defaultRecoveryFactor { get { return (double)HighLogic.CurrentGame.Parameters.CustomParams<KKCustomParameters0>().defaultRecoveryFactor;  } set { HighLogic.CurrentGame.Parameters.CustomParams<KKCustomParameters0>().defaultRecoveryFactor = (float)value; } }
-        internal double defaultEffectiveRange { get { return (double)HighLogic.CurrentGame.Parameters.CustomParams<KKCustomParameters0>().defaultEffectiveRange; } set { HighLogic.CurrentGame.Parameters.CustomParams<KKCustomParameters0>().defaultEffectiveRange = (float)value; } }
+        internal double defaultEffectiveRange { get { return HighLogic.CurrentGame.Parameters.CustomParams<KKCustomParameters0>().defaultEffectiveRange; } set { HighLogic.CurrentGame.Parameters.CustomParams<KKCustomParameters0>().defaultEffectiveRange = value; } }
         internal bool toggleIconsWithBB { get { return HighLogic.CurrentGame.Parameters.CustomParams<KKCustomParameters0>().toggleIconsWithBB; } set { HighLogic.CurrentGame.Parameters.CustomParams<KKCustomParameters0>().toggleIconsWithBB = value; } }
         internal static float soundMasterVolume { get { return HighLogic.CurrentGame.Parameters.CustomParams<KKCustomParameters0>().soundMasterVolume; } set { HighLogic.CurrentGame.Parameters.CustomParams<KKCustomParameters0>().soundMasterVolume = value; } }
-        internal double maxEditorVisRange { get { return (double)HighLogic.CurrentGame.Parameters.CustomParams<KKCustomParameters1>().maxEditorVisRange; } set { HighLogic.CurrentGame.Parameters.CustomParams<KKCustomParameters1>().maxEditorVisRange = (float)value; } }
+        internal double maxEditorVisRange { get { return HighLogic.CurrentGame.Parameters.CustomParams<KKCustomParameters1>().maxEditorVisRange; } set { HighLogic.CurrentGame.Parameters.CustomParams<KKCustomParameters1>().maxEditorVisRange = value; } }
         internal bool DebugMode
         {
             get
@@ -121,23 +121,14 @@ namespace KerbalKonstructs
         internal static bool useLegacyCamera { get { return HighLogic.CurrentGame.Parameters.CustomParams<KKCustomParameters1>().useLegacyCamera; } }
 
         // map icon settings. These are saved manually
-        [KSPField]
-        public Boolean mapShowOpen = true;
-        [KSPField]
-        public Boolean mapShowClosed = false;
-        [KSPField]
-        public Boolean mapShowOpenT = false;
-        [KSPField]
-        public Boolean mapShowHelipads = true;
-        [KSPField]
-        public Boolean mapShowRunways = true;
-        [KSPField]
-        public Boolean mapShowRocketbases = true;
-        [KSPField]
-        public Boolean mapShowWaterLaunch = true;
-        [KSPField]
-        public Boolean mapShowOther = false;
-
+        [KSPField] public Boolean mapShowOpen = true;
+        [KSPField] public Boolean mapShowClosed = false;
+        [KSPField] public Boolean mapShowOpenT = false;
+        [KSPField] public Boolean mapShowHelipads = true;
+        [KSPField] public Boolean mapShowRunways = true;
+        [KSPField] public Boolean mapShowRocketbases = true;
+        [KSPField] public Boolean mapShowWaterLaunch = true;
+        [KSPField] public Boolean mapShowOther = false;
 
         #endregion
 
@@ -382,7 +373,7 @@ namespace KerbalKonstructs
 
 
         /// <summary>
-        /// fills the basic values of the 
+        /// fills the basic values of the
         /// </summary>
         /// <param name="vessel"></param>
         /// <param name="dialog"></param>
@@ -408,7 +399,6 @@ namespace KerbalKonstructs
 
                         foreach (CustomSpaceCenter csc in SpaceCenterManager.spaceCenters)
                         {
-                            StaticInstance myBase = csc.staticInstance;
                             if (csc.staticInstance.launchSite.RecoveryFactor == 0) continue;
                             closestSpaceCenter = csc.getSpaceCenter();
                             double dist = closestSpaceCenter.GreatCircleDistance(csc.staticInstance.CelestialBody.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
@@ -423,7 +413,7 @@ namespace KerbalKonstructs
                                 }
                             }
                         }
-                       
+
                         if (customSC != null)
                         {
                             Log.Normal("Distance to closest SpaceCenter is: " + customSC.SpaceCenterName + ", distance " + smallestDist);
@@ -516,7 +506,7 @@ namespace KerbalKonstructs
                 }
             }
         }
-      
+
         /// <summary>
         /// Invoked by invoke repeating and onLevelWasLoaded gameevent. controls the visiblility of Statics
         /// </summary>
@@ -542,7 +532,7 @@ namespace KerbalKonstructs
                     //{
                     //    playerPos = spaceCenterCam.transform.position;
                     //    //Log.Normal("updateCache using SpaceCenter Camera 2 as playerPos");
-                        
+
                     //} else
                     {
                         // we can always use the SpaceCenter position as our position
@@ -604,7 +594,7 @@ namespace KerbalKonstructs
                     continue;
 
                 // create RadialPosition, If we don't have one.
-                if (instance.RadialPosition.Equals(Vector3.zero))
+                if (instance.RadialPosition.Equals(Vector3d.zero))
                 {
                     if (instance.RefLatitude != 361f && instance.RefLongitude != 361f)
                     {
@@ -628,17 +618,15 @@ namespace KerbalKonstructs
                 }
 
                 // sometimes we need a second pass.. (do we???)
-                // 
+                //
 
                 if (bSecondPass)
                 {
-                    Vector3 secondInstanceKey = instance.RadialPosition;
                     bool bSpaceOccupied = false;
 
-                    
                     foreach (StaticInstance soThis in StaticDatabase.GetAllStatics().Where(x => x.RadialPosition == instance.RadialPosition))
                     {
-                        Vector3 firstInstanceKey = soThis.RadialPosition;                      
+                        Vector3 firstInstanceKey = soThis.RadialPosition;
 
                             if (soThis.model.mesh == instance.model.mesh)
                             {
@@ -660,7 +648,7 @@ namespace KerbalKonstructs
                             {
                                 Log.Debug("Different models. Allowing. Could be a terrain foundation or integrator.");
                             }
-                        
+
                     }
 
                     if (bSpaceOccupied)
@@ -711,7 +699,7 @@ namespace KerbalKonstructs
                     string modelName = "KSC_" + facility.name + "_level_" + (i + 1).ToString();
                     string modelTitle = "KSC " + facility.name + " lv " + (i + 1).ToString();
 
-                    // don't double register the models a second time (they will do this) 
+                    // don't double register the models a second time (they will do this)
                     // maybe with a "without green flag" and filter that our later at spawn in mangle
                     if (StaticDatabase.allStaticModels.Select(x => x.name).Contains(modelName))
                         continue;
@@ -736,7 +724,7 @@ namespace KerbalKonstructs
                     if (facility.name.Equals("Runway", StringComparison.CurrentCultureIgnoreCase))
                         model.DefaultLaunchPadTransform = "End09/SpawnPoint";
 
-                    // Launchpads also 
+                    // Launchpads also
                     if (facility.name.Equals("LaunchPad", StringComparison.CurrentCultureIgnoreCase))
                         model.DefaultLaunchPadTransform = "LaunchPad_spawn";
 
@@ -799,7 +787,7 @@ namespace KerbalKonstructs
                 string modelName = "SQUAD_" + pqs.gameObject.name;
                 string modelTitle = "Squad " + pqs.gameObject.name;
 
-                // don't double register the models a second time (they will do this) 
+                // don't double register the models a second time (they will do this)
                 // maybe with a "without green flag" and filter that our later at spawn in mangle
                 if (StaticDatabase.allStaticModels.Select(x => x.name).Contains(modelName))
                     continue;
@@ -835,7 +823,7 @@ namespace KerbalKonstructs
                 string modelName = "SQUAD_" + pqs2.gameObject.name;
                 string modelTitle = "Squad " + pqs2.gameObject.name;
 
-                // don't double register the models a second time (they will do this) 
+                // don't double register the models a second time (they will do this)
                 // maybe with a "without green flag" and filter that our later at spawn in mangle
                 if (StaticDatabase.allStaticModels.Select(x => x.name).Contains(modelName))
                     continue;
@@ -886,7 +874,7 @@ namespace KerbalKonstructs
                     string modelName = "SQUAD_" + pqs.gameObject.name + "_" + child.gameObject.name;
                     string modelTitle = "Squad " + pqs.gameObject.name + " " + child.gameObject.name;
 
-                    // don't double register the models a second time (they will do this) 
+                    // don't double register the models a second time (they will do this)
                     // maybe with a "without green flag" and filter that our later at spawn in mangle
                     if (StaticDatabase.allStaticModels.Select(x => x.name).Contains(modelName))
                         continue;
@@ -930,7 +918,7 @@ namespace KerbalKonstructs
 
             foreach (PQSCity pqs in Resources.FindObjectsOfTypeAll<PQSCity>())
             {
-                if (pqs.gameObject.name != "Pyramids") 
+                if (pqs.gameObject.name != "Pyramids")
                     continue;
 
 
@@ -963,7 +951,7 @@ namespace KerbalKonstructs
                     string modelName = "SQUAD_" + pqs.gameObject.name + "_" + child.gameObject.name;
                     string modelTitle = "Squad " + pqs.gameObject.name + " " + child.gameObject.name;
 
-                    // don't double register the models a second time (they will do this) 
+                    // don't double register the models a second time (they will do this)
                     // maybe with a "without green flag" and filter that our later at spawn in mangle
                     if (StaticDatabase.allStaticModels.Select(x => x.name).Contains(modelName))
                         continue;
@@ -1124,7 +1112,7 @@ namespace KerbalKonstructs
         /// <param name="instance"></param>
         /// <param name="cfgNode"></param>
         internal static void AttachFacilities(StaticInstance instance, ConfigNode cfgNode)
-        {            
+        {
             if (!cfgNode.HasValue("FacilityType") && !cfgNode.HasNode("Facility"))
             {
                 return;
@@ -1132,7 +1120,7 @@ namespace KerbalKonstructs
             KKFacilityType facType;
             try
             {
-                facType = (KKFacilityType)Enum.Parse(typeof(KKFacilityType), cfgNode.GetValue("FacilityType"), true);                
+                facType = (KKFacilityType)Enum.Parse(typeof(KKFacilityType), cfgNode.GetValue("FacilityType"), true);
             }
             catch
             {
@@ -1147,7 +1135,7 @@ namespace KerbalKonstructs
             if (facType == KKFacilityType.None && !cfgNode.HasNode("Facility"))
             {
                 return;
-                
+
             }
             // Stuff for recursive Facilities
             instance.hasFacilities = true;
@@ -1192,10 +1180,10 @@ namespace KerbalKonstructs
                     break;
             }
 
-            
+
             //attach multiple failities
             foreach (ConfigNode facNode in cfgNode.GetNodes("Facility"))
-            {                
+            {
                 AttachFacilities(instance, facNode);
             }
 
@@ -1240,7 +1228,7 @@ namespace KerbalKonstructs
         internal void SaveInstanceByCfg(string pathname)
         {
             Log.Normal("Saving File: " + pathname);
-            StaticInstance [] allInstances = StaticDatabase.allStaticInstances.Where(instance => instance.configPath == pathname).ToArray();          
+            StaticInstance [] allInstances = StaticDatabase.allStaticInstances.Where(instance => instance.configPath == pathname).ToArray();
             StaticInstance firstInstance = allInstances.First();
             ConfigNode instanceConfig = null;
 
@@ -1274,7 +1262,7 @@ namespace KerbalKonstructs
 
 
         /// <summary>
-        /// This saves all satic objects to thier instance files.. 
+        /// This saves all satic objects to thier instance files..
         /// </summary>
         public void saveObjects()
         {
@@ -1293,7 +1281,7 @@ namespace KerbalKonstructs
                 }
                 else
                 {
-                    // find all instances with the same configPath. 
+                    // find all instances with the same configPath.
                     SaveInstanceByCfg(instance.configPath);
                 }
 
@@ -1343,7 +1331,7 @@ namespace KerbalKonstructs
 
         //        foreach (StaticObject instance in StaticDatabase.GetInstancesFromModel(model))
         //        {
-                    
+
         //            string sInstGroup = (string)instance.getSetting("Group");
 
         //            if (sGroup != "")

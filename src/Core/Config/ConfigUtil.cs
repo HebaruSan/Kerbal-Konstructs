@@ -27,8 +27,8 @@ namespace KerbalKonstructs.Core
     }
 
     /// <summary>
-    /// We use dictionarys for the lookup of the parameter types, because they are way faster then making reflection lookups.
-    /// We use reflektion calls to scan for the  datatypes of SaticModule and StaticObject with the attribute CFGSettings
+    /// We use dictionaries for the lookup of the parameter types, because they are way faster than making reflection lookups.
+    /// We use reflection calls to scan for the datatypes of StaticModule and StaticObject with the attribute CFGSettings
     /// We have for each cfgfile-setting a same named field in the classes, so we don't need a translation table.
     /// </summary>
     internal static class ConfigUtil
@@ -46,7 +46,7 @@ namespace KerbalKonstructs.Core
         private static Dictionary<string, CelestialBody> knownBodies = new Dictionary<string, CelestialBody>();
 
         /// <summary>
-        /// Fills up the lookup tables for the parser. 
+        /// Fills up the lookup tables for the parser.
         /// </summary>
         internal static void InitTypes()
         {
@@ -121,8 +121,8 @@ namespace KerbalKonstructs.Core
                         try
                         {
                             value = (SiteType)Enum.Parse(typeof(SiteType), cfgNode.GetValue(field.Name));
-                            
-                        } catch
+                        }
+                        catch
                         {
                             value = SiteType.Any;
                         }
@@ -179,7 +179,6 @@ namespace KerbalKonstructs.Core
                         try
                         {
                             value = (SiteType)Enum.Parse(typeof(SiteType), cfgNode.GetValue(property.Name));
-
                         }
                         catch
                         {
@@ -202,7 +201,7 @@ namespace KerbalKonstructs.Core
         internal static void Write2CfgNode(object source, FieldInfo field, ConfigNode cfgNode)
         {
 
-                switch (field.FieldType.ToString())
+            switch (field.FieldType.ToString())
             {
                 case "System.String":
                     cfgNode.SetValue(field.Name, (string)field.GetValue(source), true);

@@ -32,7 +32,6 @@ namespace KerbalKonstructs.Modules
         private Boolean displayingTooltip2 = false;
 
         static LaunchSite selectedSite = null;
-        static StaticInstance selectedFacility = null;
 
         internal static bool mapHideIconsBehindBody = true;
 
@@ -69,8 +68,8 @@ namespace KerbalKonstructs.Modules
             {
                 if (instance.facilityType != KKFacilityType.GroundStation && instance.facilityType != KKFacilityType.TrackingStation)
                 {
-                    continue;                  
-                }                   
+                    continue;
+                }
 
                 if (instance.Group == "KSCUpgrades")
                     continue;
@@ -103,7 +102,7 @@ namespace KerbalKonstructs.Modules
                 KerbalKonstructs.instance.mapShowClosed = true;
                 KerbalKonstructs.instance.mapShowOpen = true;
             }
-                
+
             if (!KerbalKonstructs.instance.mapShowOpenT)
                 return;
 
@@ -166,8 +165,7 @@ namespace KerbalKonstructs.Modules
                     DisplayMapIconToolTip("Tracking Station " + "\n(Lat." + disObjectLat2.ToString("#0.00") + "/ Lon." + disObjectLon2.ToString("#0.00") + ")", pos);
 
                     if (Event.current.type == EventType.mouseDown && Event.current.button == 0)
-                    {                    
-                        selectedFacility = groundStation;
+                    {
                         FacilityManager.selectedFacility = groundStation;
                         FacilityManager.instance.Open();
                     }
@@ -229,8 +227,6 @@ namespace KerbalKonstructs.Modules
                 float fPosZ = pos.z;
 
                 float fRadarRadius = 12800 / fPosZ;
-                float fRadarOffset = fRadarRadius / 2;
-
 
                 if (launchSite.icon != null)
                 {

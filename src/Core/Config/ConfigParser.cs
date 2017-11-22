@@ -27,15 +27,12 @@ namespace KerbalKonstructs.Core
 
             foreach (var modelsetting in ConfigUtil.modelFields)
             {
-                if (modelsetting.Value.GetValue(model) == null)
+                if (modelsetting.Value.GetValue(model) == null
+                    || modelsetting.Key == "mesh")
                     continue;
-
-                ;
-                if (modelsetting.Key == "mesh") continue;
 
                 if (cfgNode.HasValue(modelsetting.Key))
                     cfgNode.RemoveValue(modelsetting.Key);
-
 
                 switch (modelsetting.Value.FieldType.ToString())
                 {
@@ -102,10 +99,8 @@ namespace KerbalKonstructs.Core
 
             foreach (var instanceSetting in ConfigUtil.instanceFields)
             {
-                if (instanceSetting.Value.GetValue(instance) == null)
-                    continue;
-
-                if (instanceSetting.Key == "FacilityType")
+                if (instanceSetting.Value.GetValue(instance) == null
+                    || instanceSetting.Key == "FacilityType")
                     continue;
 
                 switch (instanceSetting.Value.FieldType.ToString())
@@ -147,10 +142,10 @@ namespace KerbalKonstructs.Core
             }
 
             if (instance.hasFacilities)
-            {               
+            {
                 for (int i = 0; i < instance.myFacilities.Count; i++)
                 {
-                     
+
                     ConfigNode facNode = cfgNode.AddNode("Facility");
                     instance.myFacilities[i].WriteConfig(facNode);
                 }
@@ -163,8 +158,6 @@ namespace KerbalKonstructs.Core
             }
 
         }
-
-
 
     }
 }

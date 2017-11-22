@@ -27,12 +27,12 @@ namespace KerbalKonstructs.UI
 
         public Texture tHolder = null;
 
-        GUIStyle DeadButton;
-        GUIStyle DeadButtonRed;
-        GUIStyle KKWindow;
-        GUIStyle BoxNoBorder;
-        GUIStyle ButtonKK;
-        GUIStyle KKToolTip;
+        private GUIStyle DeadButton;
+        private GUIStyle DeadButtonRed;
+        private GUIStyle KKWindow;
+        private GUIStyle BoxNoBorder;
+        private GUIStyle ButtonKK;
+        private GUIStyle KKToolTip;
 
         private LaunchSite selectedSite;
         public List<LaunchSite> sites;
@@ -52,7 +52,7 @@ namespace KerbalKonstructs.UI
         internal bool waterLaunchOn = true;
         public bool bFavesOnly = false;
 
-        Rect windowRect = new Rect(((Screen.width - Camera.main.rect.x) / 2) + Camera.main.rect.x - 125, (Screen.height / 2 - 250), 400, 460);
+        private Rect windowRect = new Rect(((Screen.width - Camera.main.rect.x) / 2) + Camera.main.rect.x - 125, (Screen.height / 2 - 250), 400, 460);
 
         public override void Draw()
         {
@@ -160,8 +160,7 @@ namespace KerbalKonstructs.UI
 
                 if (MiscUtils.isCareerGame())
                 {
-                    if (bOpenOn) tHolder = UIMain.tOpenBasesOn;
-                    else tHolder = UIMain.tOpenBasesOff;
+                    tHolder = bOpenOn ? UIMain.tOpenBasesOn : UIMain.tOpenBasesOff;
 
                     if (GUILayout.Button(new GUIContent(tHolder, "Open"), ButtonKK, GUILayout.Width(32), GUILayout.Height(32)))
                     {
@@ -170,11 +169,11 @@ namespace KerbalKonstructs.UI
                             bOpenOn = false;
                             bClosedOn = true;
                         }
-                        else bOpenOn = true;
+                        else
+                            bOpenOn = true;
                     }
 
-                    if (bClosedOn) tHolder = UIMain.tClosedBasesOn;
-                    else tHolder = UIMain.tClosedBasesOff;
+                    tHolder = bClosedOn ? UIMain.tClosedBasesOn : UIMain.tClosedBasesOff;
 
                     if (GUILayout.Button(new GUIContent(tHolder, "Closed"), ButtonKK, GUILayout.Width(32), GUILayout.Height(32)))
                     {
@@ -183,22 +182,18 @@ namespace KerbalKonstructs.UI
                             bClosedOn = false;
                             bOpenOn = true;
                         }
-                        else bClosedOn = true;
+                        else
+                            bClosedOn = true;
                     }
 
                     GUILayout.FlexibleSpace();
                 }
 
-                if (bFavesOnly) tHolder = tFavesOn;
-                else tHolder = tFavesOff;
+                tHolder = bFavesOnly ? tFavesOn : tFavesOff;
 
                 if (GUILayout.Button(new GUIContent(tHolder, "Only Favourites"), ButtonKK, GUILayout.Width(32), GUILayout.Height(32)))
                 {
-                    if (bFavesOnly)
-                    {
-                        bFavesOnly = false;
-                    }
-                    else bFavesOnly = true;
+                    bFavesOnly = !bFavesOnly;
                 }
 
                 GUILayout.FlexibleSpace();
@@ -206,8 +201,7 @@ namespace KerbalKonstructs.UI
                 if (editorType == SiteType.SPH)
                     GUI.enabled = false;
 
-                if (bRocketpadsOn) tHolder = UIMain.tLaunchpadsOn;
-                else tHolder = UIMain.tLaunchpadsOff;
+                tHolder = bRocketpadsOn ? UIMain.tLaunchpadsOn : UIMain.tLaunchpadsOff;
 
                 if (GUILayout.Button(new GUIContent(tHolder, "Rocketpads"), ButtonKK, GUILayout.Width(32), GUILayout.Height(32)))
                 {
@@ -227,8 +221,7 @@ namespace KerbalKonstructs.UI
                 if (editorType == SiteType.VAB)
                     GUI.enabled = false;
 
-                if (bRunwaysOn) tHolder = UIMain.tRunwaysOn;
-                else tHolder = UIMain.tRunwaysOff;
+                tHolder = bRunwaysOn ? UIMain.tRunwaysOn : UIMain.tRunwaysOff;
 
                 if (GUILayout.Button(new GUIContent(tHolder, "Runways"), ButtonKK, GUILayout.Width(32), GUILayout.Height(32)))
                 {
@@ -248,8 +241,8 @@ namespace KerbalKonstructs.UI
                 if (editorType == SiteType.VAB)
                     GUI.enabled = false;
 
-                if (bHelipadsOn) tHolder = UIMain.tHelipadsOn;
-                else tHolder = UIMain.tHelipadsOff;
+                if (bHelipadsOn)
+                    tHolder = bHelipadsOn ? UIMain.tHelipadsOn : UIMain.tHelipadsOff;
 
                 if (GUILayout.Button(new GUIContent(tHolder, "Helipads"), ButtonKK, GUILayout.Width(32), GUILayout.Height(32)))
                 {
@@ -269,8 +262,7 @@ namespace KerbalKonstructs.UI
                 if (editorType == SiteType.VAB)
                     GUI.enabled = false;
 
-                if (waterLaunchOn) tHolder = UIMain.tWaterOn;
-                else tHolder = UIMain.tWaterOff;
+                tHolder = waterLaunchOn ? UIMain.tWaterOn : UIMain.tWaterOff;
 
                 if (GUILayout.Button(new GUIContent(tHolder, "WalterLaunch"), ButtonKK, GUILayout.Width(32), GUILayout.Height(32)))
                 {
@@ -287,8 +279,7 @@ namespace KerbalKonstructs.UI
                 GUI.enabled = true;
                 GUILayout.Space(2);
 
-                if (bOtherOn) tHolder = UIMain.tOtherOn;
-                else tHolder = UIMain.tOtherOff;
+                tHolder = bOtherOn ? UIMain.tOtherOn : UIMain.tOtherOff;
 
                 if (GUILayout.Button(new GUIContent(tHolder, "Other"), ButtonKK, GUILayout.Width(32), GUILayout.Height(32)))
                 {
@@ -321,8 +312,9 @@ namespace KerbalKonstructs.UI
 
             sitesScrollPosition = GUILayout.BeginScrollView(sitesScrollPosition);
             {
-                if (sites == null) sites = (editorType == SiteType.Any) ?
-                    LaunchSiteManager.getLaunchSites() : LaunchSiteManager.getLaunchSites(editorType, true, "ALL");
+                if (sites == null)
+                    sites = (editorType == SiteType.Any) ? LaunchSiteManager.getLaunchSites()
+                        : LaunchSiteManager.getLaunchSites(editorType, true, "ALL");
 
                 sites.Sort(delegate (LaunchSite a, LaunchSite b)
                 {
@@ -339,20 +331,14 @@ namespace KerbalKonstructs.UI
 
                     if (MiscUtils.isCareerGame())
                     {
-                        if (!bOpenOn)
-                        {
-                            if (site.isOpen)
-                                continue;
-                        }
+                        if (!bOpenOn && site.isOpen)
+                            continue;
 
-                        if (!bClosedOn)
-                        {
-                            if (!site.isOpen)
-                                continue;
-                        }
+                        if (!bClosedOn && !site.isOpen)
+                            continue;
 
                         // Don't show hidden closed Bases
-                        if (site.LaunchSiteIsHidden && (!site.isOpen))
+                        if (site.LaunchSiteIsHidden && !site.isOpen)
                             continue;
 
                         GUILayout.BeginHorizontal();
@@ -407,8 +393,7 @@ namespace KerbalKonstructs.UI
             {
                 if (sCurrentSite == "Runway")
                     GUILayout.Box("Current Launchsite: KSC Runway");
-                else
-                    if (sCurrentSite == "LaunchPad")
+                else if (sCurrentSite == "LaunchPad")
                     GUILayout.Box("Current Launchsite: KSC LaunchPad");
                 else
                     GUILayout.Box("Current Launchsite: " + sCurrentSite);

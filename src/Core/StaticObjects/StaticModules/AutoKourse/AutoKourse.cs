@@ -7,33 +7,37 @@ namespace BWStatics
 {
 	public class AutoKourseModule: StaticModule
 	{
-		public AutoKourseModule ()
+		public AutoKourseModule()
 		{
 		}
 
-		public void Awake() {
-			
-			try {
+		public void Awake()
+		{
+
+			try
+			{
 				setTextures();
 			}
-			catch {
-				Debug.Log ("AutoKourseModule: Awake failed in setTextures()");
-			}	
+			catch
+			{
+				Debug.Log("AutoKourseModule: Awake failed in setTextures()");
+			}
 		}
 
-		public override void StaticObjectUpdate() {
-			setTextures ();
+		public override void StaticObjectUpdate()
+		{
+			setTextures();
 		}
 
-		private void setTextures() {
-
+		private void setTextures()
+		{
 			int heading = getHeading ();
 			if (heading % 10 > 5)
 				heading += 10 - heading % 10;
             if (heading < 6)
                 heading = 360; // There are no 00 runways, they all are 36!
 
-            Debug.Log ("AutoKourseModule: heading = " + heading);
+            Debug.Log("AutoKourseModule: heading = " + heading);
 			int dg0 = heading / 10 % 10;
 			int dg1 = heading / 100 % 10;
 			Transform digit0 = gameObject.transform.GetChild(0).FindChild("digit0_obj");
@@ -42,13 +46,13 @@ namespace BWStatics
 			Renderer dg0renderer = digit0.GetComponent<Renderer>();
 			Renderer dg1renderer = digit1.GetComponent<Renderer>();
 
-			Debug.Log ("AutoKourseModule: setting course " + dg1 + dg0);
+			Debug.Log("AutoKourseModule: setting course " + dg1 + dg0);
 			dg0renderer.material.SetTextureOffset("_MainTex",  new Vector2(dg0 * 0.1f,0));
 			dg1renderer.material.SetTextureOffset("_MainTex",  new Vector2(dg1 * 0.1f,0));
 		}
 
-		private int getHeading() {
-			
+		private int getHeading()
+		{
 			CelestialBody body = FlightGlobals.ActiveVessel.mainBody;
 			Vector3 upVector = body.GetSurfaceNVector(
 				FlightGlobals.ActiveVessel.latitude, FlightGlobals.ActiveVessel.longitude).normalized;
@@ -62,4 +66,3 @@ namespace BWStatics
 		}
 	}
 }
-

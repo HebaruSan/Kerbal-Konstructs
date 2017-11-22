@@ -41,7 +41,7 @@ namespace KerbalKonstructs.UI
 		public Texture tFoldIn = GameDatabase.Instance.GetTexture("KerbalKonstructs/Assets/foldout", false);
 		public Texture tFolded = GameDatabase.Instance.GetTexture("KerbalKonstructs/Assets/foldout", false);
 
-		
+
 		public static LaunchSite selectedSite = null;
 
 		GUIStyle Yellowtext;
@@ -87,7 +87,7 @@ namespace KerbalKonstructs.UI
 			{
 				if (!doneFold)
 					BaseManagerRect = new Rect(BaseManagerRect.xMin, BaseManagerRect.yMin, BaseManagerRect.width, BaseManagerRect.height - 255);
-				
+
 				doneFold = true;
 			}
 
@@ -95,7 +95,7 @@ namespace KerbalKonstructs.UI
 			{
 				if (doneFold)
 					BaseManagerRect = new Rect(BaseManagerRect.xMin, BaseManagerRect.yMin, BaseManagerRect.width, BaseManagerRect.height + 255);
-				
+
 				doneFold = false;
 			}
 
@@ -281,15 +281,15 @@ namespace KerbalKonstructs.UI
 				}
 				GUI.enabled = true;
 
-				if (isFavourite) 
+				if (isFavourite)
 					tFaveTemp = tIsFave;
-				else 
+				else
 					tFaveTemp = tMakeFavourite;
-				
+
 				if (GUILayout.Button(tFaveTemp, GUILayout.Height(23), GUILayout.Width(23)))
 				{
 					if (isFavourite)
-						selectedSite.favouriteSite = "No";							
+						selectedSite.favouriteSite = "No";
 					else
 						selectedSite.favouriteSite = "Yes";
 				}
@@ -381,7 +381,6 @@ namespace KerbalKonstructs.UI
 				isLocked = (selectedSite.OpenCloseState == "OpenLocked" || selectedSite.OpenCloseState == "ClosedLocked");
 				isLaunch = (selectedSite.OpenCloseState == "OpenLocked" || selectedSite.OpenCloseState == "Open");
 				GUI.enabled = !isOpen && !isLocked;
-				List<LaunchSite> sites = LaunchSiteManager.getLaunchSites();
 				if (!isAlwaysOpen)
 				{
 					if (!KerbalKonstructs.instance.disableRemoteBaseOpening)
@@ -429,7 +428,7 @@ namespace KerbalKonstructs.UI
 								tStatusLaunchsite = tClosedLaunchsite;
 
 						GUILayout.Label(tStatusLaunchsite, GUILayout.Height(32), GUILayout.Width(32));
-						
+
 						GUI.enabled = (isLaunch || isAlwaysOpen) && !(selectedSite.LaunchSiteName == EditorLogic.fetch.launchSiteName);
 						if (GUILayout.Button("Set as \nLaunchsite", GUILayout.Height(38)))
 						{

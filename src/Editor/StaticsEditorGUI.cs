@@ -28,14 +28,14 @@ namespace KerbalKonstructs.UI
             }
         }
 
-        Rect editorRect = new Rect(10, 25, 680, 540);
+        private Rect editorRect = new Rect(10, 25, 680, 540);
 
-        GUIStyle DeadButton;
-        GUIStyle DeadButtonRed;
-        GUIStyle DeadButton2;
-        GUIStyle DeadButton3;
-        GUIStyle KKWindow;
-        GUIStyle BoxNoBorder;
+        private GUIStyle DeadButton;
+        private GUIStyle DeadButtonRed;
+        private GUIStyle DeadButton2;
+        private GUIStyle DeadButton3;
+        private GUIStyle KKWindow;
+        private GUIStyle BoxNoBorder;
 
         public Texture tHorizontalSep = GameDatabase.Instance.GetTexture("KerbalKonstructs/Assets/horizontalsep3", false);
         public Texture tTick = GameDatabase.Instance.GetTexture("KerbalKonstructs/Assets/settingstick", false);
@@ -56,25 +56,24 @@ namespace KerbalKonstructs.UI
         public static StaticInstance selectedObject = null;
         public StaticInstance selectedObjectPrevious = null;
         public StaticInstance snapTargetInstance = null;
-        StaticInstance snapTargetInstancePrevious = null;
 
         public float fButtonWidth = 0f;
 
-        String customgroup = "";
-        String categoryfilter = "";
-        String titlefilter = "";
-        String categoryfilterset = "";
-        String titlefilterset = "";
-        String sTitleHolder = "";
-        String sCategoryHolder = "";
-        String groupfilter = "";
-        String groupfilterset = "";
+        private String customgroup = "";
+        private String categoryfilter = "";
+        private String titlefilter = "";
+        private String categoryfilterset = "";
+        private String titlefilterset = "";
+        private String sTitleHolder = "";
+        private String sCategoryHolder = "";
+        private String groupfilter = "";
+        private String groupfilterset = "";
 
-        String sButtonText = "";
+        private String sButtonText = "";
 
-        float localRange = 10000f;
+        private float localRange = 10000f;
 
-        Vector2 scrollPos;
+        private Vector2 scrollPos;
 
         public Boolean foldedIn = false;
         public Boolean doneFold = false;
@@ -83,11 +82,9 @@ namespace KerbalKonstructs.UI
 
         // models change only once
         private static List<StaticModel> allStaticModels;
-        //static need only be loaded once per three seconnds
+        // static need only be loaded once per three seconnds
         private static float lastloaded = 0f;
-        internal static StaticInstance [] allStaticInstances;
-
-
+        internal static StaticInstance[] allStaticInstances;
 
         public void ToggleEditor()
         {
@@ -110,11 +107,10 @@ namespace KerbalKonstructs.UI
         /// </summary>
         public override void Draw()
         {
-            if (MapView.MapIsEnabled)
+            if (!MapView.MapIsEnabled)
             {
-                return;
+                drawEditor();
             }
-            drawEditor();
         }
 
         public override void Open()
@@ -140,8 +136,7 @@ namespace KerbalKonstructs.UI
 
                 doneFold = true;
             }
-
-            if (!foldedIn)
+            else
             {
                 if (doneFold)
                     editorRect = new Rect(editorRect.xMin, editorRect.yMin, editorRect.width + 245, editorRect.height + 255);
@@ -238,28 +233,27 @@ namespace KerbalKonstructs.UI
 
             GUILayout.BeginHorizontal();
             {
-                if (foldedIn) tFolded = tFoldOut;
-                if (!foldedIn) tFolded = tFoldIn;
+                tFolded = foldedIn ? tFoldOut : tFoldIn;
 
                 if (GUILayout.Button(tFolded, GUILayout.Height(23), GUILayout.Width(23)))
                 {
-                    if (foldedIn) foldedIn = false;
-                    else
-                        foldedIn = true;
+                    foldedIn = !foldedIn;
                 }
 
                 GUI.enabled = !creatingInstance;
 
-                sButtonText = "";
-                fButtonWidth = 0f;
+                if (foldedIn)
+                {
+                    sButtonText = "New";
+                    fButtonWidth = 50f;
+                }
+                else
+                {
+                    sButtonText = "Spawn New";
+                    fButtonWidth = 110f;
+                }
 
-                if (foldedIn) fButtonWidth = 50f;
-                else fButtonWidth = 110f;
-
-                if (foldedIn) sButtonText = "New";
-                else sButtonText = "Spawn New";
-
-                if (GUILayout.Button("" + sButtonText, GUILayout.Height(23), GUILayout.Width(fButtonWidth)))
+                if (GUILayout.Button(sButtonText, GUILayout.Height(23), GUILayout.Width(fButtonWidth)))
                 {
                     EditorGUI.CloseEditors();
                     creatingInstance = true;
@@ -270,25 +264,23 @@ namespace KerbalKonstructs.UI
 
                 GUI.enabled = creatingInstance || showLocal;
 
-                if (foldedIn) sButtonText = "All";
-                else sButtonText = "All Instances";
+                sButtonText = foldedIn ? "All" : "All Instances";
 
-                if (GUILayout.Button("" + sButtonText, GUILayout.Width(fButtonWidth), GUILayout.Height(23)))
+                if (GUILayout.Button(sButtonText, GUILayout.Width(fButtonWidth), GUILayout.Height(23)))
                 {
                     EditorGUI.CloseEditors();
                     creatingInstance = false;
                     showLocal = false;
-                    KerbalKonstructs.instance.DeletePreviewObject();                   
+                    KerbalKonstructs.instance.DeletePreviewObject();
                 }
 
                 GUI.enabled = true;
                 GUILayout.Space(2);
                 GUI.enabled = creatingInstance || !showLocal;
 
-                if (foldedIn) sButtonText = "Local";
-                else sButtonText = "Local Instances";
+                sButtonText = foldedIn ? "Local" : "Local Instances";
 
-                if (GUILayout.Button("" + sButtonText, GUILayout.Width(fButtonWidth), GUILayout.Height(23)))
+                if (GUILayout.Button(sButtonText, GUILayout.Width(fButtonWidth), GUILayout.Height(23)))
                 {
                     EditorGUI.CloseEditors();
                     creatingInstance = false;
@@ -317,15 +309,13 @@ namespace KerbalKonstructs.UI
                     GUILayout.Space(15);
                     if (GUILayout.Button("Category", DeadButton, GUILayout.Width(110), GUILayout.Height(23)))
                     {
-                        if (bSortCategory) bSortCategory = false;
-                        else bSortCategory = true;
+                        bSortCategory = !bSortCategory;
                     }
 
                     GUILayout.Space(5);
                     if (GUILayout.Button("Title", DeadButton, GUILayout.Height(23)))
                     {
-                        if (bSortTitle) bSortTitle = false;
-                        else bSortTitle = true;
+                        bSortTitle = !bSortTitle;
                     }
                     GUILayout.FlexibleSpace();
                     GUILayout.Button("Mesh", DeadButton, GUILayout.Width(140), GUILayout.Height(23));
@@ -338,8 +328,6 @@ namespace KerbalKonstructs.UI
             scrollPos = GUILayout.BeginScrollView(scrollPos);
             if (creatingInstance)
             {
-
-
                 if (bSortCategory)
                 {
                     allStaticModels.Sort(delegate (StaticModel a, StaticModel b)
@@ -395,7 +383,7 @@ namespace KerbalKonstructs.UI
 
                         if (!foldedIn)
                         {
-                            if (GUILayout.Button(new GUIContent("" + allStaticModels[idx].category, "Filter"), DeadButton, GUILayout.Width(110), GUILayout.Height(23)))
+                            if (GUILayout.Button(new GUIContent(allStaticModels[idx].category, "Filter"), DeadButton, GUILayout.Width(110), GUILayout.Height(23)))
                             {
                                 categoryfilter = allStaticModels[idx].category;
                                 categoryfilterset = categoryfilter;
@@ -405,7 +393,7 @@ namespace KerbalKonstructs.UI
                             GUILayout.Space(5);
                         }
 
-                        if (GUILayout.Button(new GUIContent("" + "" + allStaticModels[idx].title, "Spawn an instance of this static."), DeadButton2, GUILayout.Height(23)))
+                        if (GUILayout.Button(new GUIContent(allStaticModels[idx].title, "Spawn an instance of this static."), DeadButton2, GUILayout.Height(23)))
                         {
                             EditorGUI.CloseEditors();
                             KerbalKonstructs.instance.DeletePreviewObject();
@@ -435,7 +423,6 @@ namespace KerbalKonstructs.UI
             {
                 UpdateInstances();
                 for (int ix = 0; ix < allStaticInstances.Length; ix++)
-                //foreach (StaticObject obj in allStaticInstances)
                 {
                     bool isLocal = true;
 
@@ -470,7 +457,7 @@ namespace KerbalKonstructs.UI
                         GUILayout.BeginHorizontal();
                         if (!foldedIn)
                         {
-                            GUILayout.Button("" + allStaticInstances[ix].Group, DeadButton3, GUILayout.Width(120), GUILayout.Height(23));
+                            GUILayout.Button(allStaticInstances[ix].Group, DeadButton3, GUILayout.Width(120), GUILayout.Height(23));
                             if (allStaticInstances[ix].hasLauchSites)
                             {
                                 sLaunchType = allStaticInstances[ix].launchSite.Category;
@@ -499,7 +486,7 @@ namespace KerbalKonstructs.UI
                         }
 
                         //GUI.enabled = (obj != selectedObject);
-                        if (GUILayout.Button(new GUIContent("" + allStaticInstances[ix].model.title + " ( " + allStaticInstances[ix].indexInGroup.ToString() + " )" , "Edit this instance."), GUILayout.Height(23)))
+                        if (GUILayout.Button(new GUIContent(allStaticInstances[ix].model.title + " ( " + allStaticInstances[ix].indexInGroup.ToString() + " )" , "Edit this instance."), GUILayout.Height(23)))
                         {
                             KerbalKonstructs.instance.bDisablePositionEditing = false;
                             enableColliders = true;
@@ -533,7 +520,6 @@ namespace KerbalKonstructs.UI
                             {
                                 if (snapTargetInstance != null)
                                 {
-                                    snapTargetInstancePrevious = snapTargetInstance;
                                     Color highlightColor3 = new Color(0, 0, 0, 0);
                                     snapTargetInstance.HighlightObject(highlightColor3);
                                 }
@@ -555,38 +541,35 @@ namespace KerbalKonstructs.UI
 
             GUI.enabled = true;
 
-            if (!foldedIn)
+            if (!foldedIn && creatingInstance)
             {
-                if (creatingInstance)
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Filter by ");
+                GUILayout.Label(" Category:");
+                categoryfilter = GUILayout.TextField(categoryfilter, 30, GUILayout.Width(90));
+                if (GUILayout.Button(new GUIContent(tSearch, "Apply Filter."), GUILayout.Width(23), GUILayout.Height(23)))
                 {
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Label("Filter by ");
-                    GUILayout.Label(" Category:");
-                    categoryfilter = GUILayout.TextField(categoryfilter, 30, GUILayout.Width(90));
-                    if (GUILayout.Button(new GUIContent(tSearch, "Apply Filter."), GUILayout.Width(23), GUILayout.Height(23)))
-                    {
-                        categoryfilterset = categoryfilter;
-                        titlefilterset = titlefilter;
-                    }
-                    if (GUILayout.Button(new GUIContent(tCancelSearch, "Remove Filter."), GUILayout.Width(23), GUILayout.Height(23)))
-                    {
-                        categoryfilter = "";
-                        categoryfilterset = "";
-                    }
-                    GUILayout.Label("  Title:");
-                    titlefilter = GUILayout.TextField(titlefilter, 30, GUILayout.Width(90));
-                    if (GUILayout.Button(new GUIContent(tSearch, "Apply Filter."), GUILayout.Width(23), GUILayout.Height(23)))
-                    {
-                        categoryfilterset = categoryfilter;
-                        titlefilterset = titlefilter;
-                    }
-                    if (GUILayout.Button(new GUIContent(tCancelSearch, "Remove Filter."), GUILayout.Width(23), GUILayout.Height(23)))
-                    {
-                        titlefilter = "";
-                        titlefilterset = "";
-                    }
-                    GUILayout.EndHorizontal();
+                    categoryfilterset = categoryfilter;
+                    titlefilterset = titlefilter;
                 }
+                if (GUILayout.Button(new GUIContent(tCancelSearch, "Remove Filter."), GUILayout.Width(23), GUILayout.Height(23)))
+                {
+                    categoryfilter = "";
+                    categoryfilterset = "";
+                }
+                GUILayout.Label("  Title:");
+                titlefilter = GUILayout.TextField(titlefilter, 30, GUILayout.Width(90));
+                if (GUILayout.Button(new GUIContent(tSearch, "Apply Filter."), GUILayout.Width(23), GUILayout.Height(23)))
+                {
+                    categoryfilterset = categoryfilter;
+                    titlefilterset = titlefilter;
+                }
+                if (GUILayout.Button(new GUIContent(tCancelSearch, "Remove Filter."), GUILayout.Width(23), GUILayout.Height(23)))
+                {
+                    titlefilter = "";
+                    titlefilterset = "";
+                }
+                GUILayout.EndHorizontal();
             }
 
             if (!foldedIn)
@@ -610,7 +593,7 @@ namespace KerbalKonstructs.UI
                     }
                     GUILayout.EndHorizontal();
 
-                    GUILayout.BeginHorizontal();
+                    //GUILayout.BeginHorizontal();
                     //{
                     //    GUILayout.Label("Pack Name: ", GUILayout.Width(140));
                     //    //GUILayout.FlexibleSpace();
@@ -655,20 +638,16 @@ namespace KerbalKonstructs.UI
                     //    }
                     //    GUI.enabled = true;
                     //}
-                    GUILayout.EndHorizontal();
-
+                    //GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
                     if (GUILayout.Button("Disable Camera Focus/Position Editing", GUILayout.Height(23)))
                     {
-
                         bDisableEditingSetting = true;
                     }
 
                     GUILayout.Button(tCross, DeadButton, GUILayout.Height(23), GUILayout.Width(23));
                     GUILayout.EndHorizontal();
-
-
                 }
              }
 
@@ -683,20 +662,12 @@ namespace KerbalKonstructs.UI
                 GUI.enabled = showLocal;
                 if (GUILayout.Button("-", GUILayout.Width(25)))
                 {
-                    if (localRange < 5000)
-                    {
-
-                    }
-                    else
+                    if (localRange >= 5000)
                         localRange = localRange / 2;
                 }
                 if (GUILayout.Button("+", GUILayout.Width(25)))
                 {
-                    if (localRange > 79999)
-                    {
-
-                    }
-                    else
+                    if (localRange <= 79999)
                         localRange = localRange * 2;
                 }
                 GUI.enabled = true;
@@ -713,13 +684,18 @@ namespace KerbalKonstructs.UI
                     customgroup = GUILayout.TextField(customgroup, 25, GUILayout.Width(45));
 
                 GUI.enabled = true;
-
                 GUI.enabled = showLocal;
 
-                if (!foldedIn) sButtonText = "Set as Group";
-                else sButtonText = "Set";
-                if (!foldedIn) fButtonWidth = 100;
-                else fButtonWidth = 35;
+                if (!foldedIn)
+                {
+                    sButtonText = "Set as Group";
+                    fButtonWidth = 100;
+                }
+                else
+                {
+                    sButtonText = "Set";
+                    fButtonWidth = 35;
+                }
 
                 if (GUILayout.Button("" + sButtonText, GUILayout.Width(fButtonWidth)))
                 {
@@ -769,11 +745,12 @@ namespace KerbalKonstructs.UI
         /// <param name="model"></param>
 		public void spawnInstance(StaticModel model)
         {
-            EditorGUI.instance.spawnInstance(model,
-                (float)FlightGlobals.ActiveVessel.altitude,
+            EditorGUI.instance.spawnInstance(
+                model,
+                FlightGlobals.ActiveVessel.altitude,
                 KerbalKonstructs.instance.getCurrentBody().transform.InverseTransformPoint(FlightGlobals.ActiveVessel.transform.position),
-                0f);
-
+                0f
+            );
         }
 
         private static void UpdateInstances()
@@ -790,7 +767,7 @@ namespace KerbalKonstructs.UI
         /// </summary>
         internal void SelectMouseObject()
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); ;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             int layerMask = ~0;
 
             RaycastHit hit;
@@ -804,7 +781,6 @@ namespace KerbalKonstructs.UI
             if (myHitinstance == null)
             {
                 Log.Normal("No RootObject found");
-                return;
             }
             else
             {
@@ -812,7 +788,6 @@ namespace KerbalKonstructs.UI
                 myHitinstance.HighlightObject(XKCDColors.Green_Yellow);
                 KerbalKonstructs.instance.selectObject(myHitinstance, true, true, false);
             }
-
         }
 
         /// <summary>
@@ -838,7 +813,6 @@ namespace KerbalKonstructs.UI
             // we didn't find any root object, so we return null
             return null;
         }
-
 
     }
 }

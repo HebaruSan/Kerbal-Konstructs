@@ -14,42 +14,26 @@ namespace KerbalKonstructs.Core
 	{
 
         // Position
-        [CFGSetting]
-        public CelestialBody CelestialBody = null;
-        [CFGSetting]
-        public Vector3 RadialPosition = Vector3.zero;
-        [CFGSetting]
-        public Vector3 Orientation;
-        [CFGSetting]
-        public float RadiusOffset;
-        [CFGSetting]
-        public float RotationAngle;
-        [CFGSetting]
-        public bool isScanable = false;
-        [CFGSetting]
-        public float ModelScale = 1f;
+        [CFGSetting] public CelestialBody CelestialBody = null;
+        [CFGSetting] public Vector3d RadialPosition = Vector3.zero;
+        [CFGSetting] public Vector3 Orientation;
+        [CFGSetting] public double RadiusOffset;
+        [CFGSetting] public float RotationAngle;
+        [CFGSetting] public bool isScanable = false;
+        [CFGSetting] public double ModelScale = 1f;
 
         // Legacy Faclility Setting
-        [CFGSetting]
-        public string FacilityType = "None";
+        [CFGSetting] public string FacilityType = "None";
 
         // Calculated References
-        [CFGSetting]
-        public double RefLatitude = 361f;
-        [CFGSetting]
-        public double RefLongitude = 361f;
+        [CFGSetting] public double RefLatitude = 361f;
+        [CFGSetting] public double RefLongitude = 361f;
 
         // Visibility and Grouping
-        [CFGSetting]
-        public float VisibilityRange = 25000f;
-        [CFGSetting]
-        public string Group  = "Ungrouped";
-        [CFGSetting]
-        public string GroupCenter = "false";
-        [CFGSetting]
-        public bool useRadiusOffset = true;
-
-
+        [CFGSetting] public double VisibilityRange = 25000f;
+        [CFGSetting] public string Group  = "Ungrouped";
+        [CFGSetting] public string GroupCenter = "false";
+        [CFGSetting] public bool useRadiusOffset = true;
 
         public GameObject gameObject;
         public PQSCity pqsCity;
@@ -63,23 +47,22 @@ namespace KerbalKonstructs.Core
         public bool hasLauchSites = false;
         public LaunchSite launchSite;
 
-        public KKFacilityType facilityType = KKFacilityType.None; 
+        public KKFacilityType facilityType = KKFacilityType.None;
         public List<KKFacility> myFacilities = new List<KKFacility>();
 
 
         // used for non KKFacility objects like AirRace
         public string legacyfacilityID;
 
+		internal bool editing;
+        internal bool preview;
 
-		internal Boolean editing;
-        internal Boolean preview;
-
-        private Vector3 origScale;
-        internal bool isActive ;
+        private Vector3d origScale;
+        internal bool isActive;
 
         internal int indexInGroup = 0;
 
-		private List<Renderer> _rendererComponents; 
+		private List<Renderer> _rendererComponents;
 
 
         /// <summary>
@@ -116,7 +99,7 @@ namespace KerbalKonstructs.Core
         internal void ToggleAllColliders(bool enable)
 		{
 			Transform[] gameObjectList = gameObject.GetComponentsInChildren<Transform>();
-			
+
 			List<GameObject> colliderList = (from t in gameObjectList where t.gameObject.GetComponent<Collider>() != null select t.gameObject).ToList();
 
 			foreach (GameObject gocollider in colliderList)
@@ -125,16 +108,16 @@ namespace KerbalKonstructs.Core
 			}
 		}
 
-        internal float GetDistanceToObject(Vector3 vPosition)
+        internal double GetDistanceToObject(Vector3d vPosition)
 		{
-			float fDistance = 0f;
-			fDistance = Vector3.Distance(gameObject.transform.position, vPosition);
+			double fDistance = 0;
+			fDistance = Vector3d.Distance(gameObject.transform.position, vPosition);
 			return fDistance;
 		}
 
 
         /// <summary>
-        /// Spawns a new Instance in the Gameworld and registers itself to the Static Database 
+        /// Spawns a new Instance in the Gameworld and registers itself to the Static Database
         /// </summary>
         /// <param name="editing"></param>
         /// <param name="bPreview"></param>
@@ -148,27 +131,29 @@ namespace KerbalKonstructs.Core
 
             // Objects spawned at runtime should be active, ones spawned at loading not
             InstanceUtil.SetActiveRecursively(this,editing);
-			
+
 			Transform[] gameObjectList = gameObject.GetComponentsInChildren<Transform>();
 			List<GameObject> rendererList = (from t in gameObjectList where t.gameObject.GetComponent<Renderer>() != null select t.gameObject).ToList();
 
 			setLayerRecursively(gameObject, 15);
 
-			if (bPreview) this.ToggleAllColliders(false);
+			if (bPreview)
+				this.ToggleAllColliders(false);
 
 			this.preview = bPreview;
 
-			if (editing) KerbalKonstructs.instance.selectObject(this, true, true, bPreview);
+			if (editing)
+				KerbalKonstructs.instance.selectObject(this, true, true, bPreview);
 
-			float objvisibleRange = VisibilityRange;
-			
+			double objvisibleRange = VisibilityRange;
+
 			if (objvisibleRange < 1) objvisibleRange = 25000f;
 
             PQSCity.LODRange range = new PQSCity.LODRange
             {
                 renderers = new GameObject[0],
                 objects = new GameObject[0],
-                visibleRange = objvisibleRange
+                visibleRange = (float) objvisibleRange
             };
 
             pqsCity = gameObject.AddComponent<PQSCity>();
@@ -182,29 +167,23 @@ namespace KerbalKonstructs.Core
             gameObject.transform.parent = CelestialBody.pqsController.transform;
             pqsCity.sphere = CelestialBody.pqsController;
             origScale = pqsCity.transform.localScale;             // save the original scale for later use
-            pqsCity.transform.localScale *= ModelScale;
+            pqsCity.transform.localScale *= (float) ModelScale;
             pqsCity.order = 100;
             pqsCity.modEnabled = true;
             pqsCity.repositionToSphere = true; //enable repositioning
             pqsCity.repositionToSphereSurface = false; //Snap to surface?
-
-
-
 
             CelestialBody.pqsController.GetSurfaceHeight(RadialPosition);
 
             pqsCity.OnSetup();
             pqsCity.Orientate();
 
-
-
-
             //PQSCity2.LodObject lodObject = new PQSCity2.LodObject();
             //lodObject.visibleRange = VisibilityRange;
             //lodObject.objects = new GameObject[] { };
             //pqsCity2 = gameObject.AddComponent<PQSCity2>();
             //pqsCity2.objects = new [] { lodObject } ;
-            //pqsCity2.objectName = ""; 
+            //pqsCity2.objectName = "";
             //pqsCity2.lat = RefLatitude;
             //pqsCity2.lon = RefLongitude;
             //pqsCity2.alt = RadiusOffset;
@@ -259,8 +238,6 @@ namespace KerbalKonstructs.Core
                 pqsObjectList.Add(pqsCity as PQSSurfaceObject);
                 CelestialBody.pqsSurfaceObjects = pqsObjectList.ToArray();
             }
-
-
         }
 
 
@@ -275,9 +252,9 @@ namespace KerbalKonstructs.Core
             var transforms = gameObject.GetComponentsInChildren<Transform>(true);
             for (int i = 0; i < transforms.Length; i++)
             {
-                if (transforms[i].gameObject.GetComponent<Collider>() == null) transforms[i].gameObject.layer = newLayerNumber;
-                else
-                if (!transforms[i].gameObject.GetComponent<Collider>().isTrigger) transforms[i].gameObject.layer = newLayerNumber;
+                if (transforms[i].gameObject.GetComponent<Collider>() == null)
+					transforms[i].gameObject.layer = newLayerNumber;
+                else if (!transforms[i].gameObject.GetComponent<Collider>().isTrigger) transforms[i].gameObject.layer = newLayerNumber;
             }
 		}
 
@@ -288,7 +265,8 @@ namespace KerbalKonstructs.Core
         internal void deselectObject(Boolean enableColliders)
 		{
 			this.editing = false;
-			if (enableColliders) this.ToggleAllColliders(true);
+			if (enableColliders)
+				this.ToggleAllColliders(true);
 
 			Color highlightColor = new Color(0, 0, 0, 0);
 			this.HighlightObject(highlightColor);

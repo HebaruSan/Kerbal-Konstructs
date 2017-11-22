@@ -15,27 +15,26 @@ namespace KerbalKonstructs.UI
         internal static EditorGUI instance
         {
             get
-            { if   (_instance == null)
+            {
+                if (_instance == null)
                 {
                     _instance = new EditorGUI();
-                    
                 }
                 return _instance;
             }
         }
 
         #region Variable Declarations
-        private List<Transform> transformList = new List<Transform>();
         private CelestialBody body;
 
-        internal Boolean foldedIn = false;
-        internal Boolean doneFold = false;
+        internal bool foldedIn = false;
+        internal bool doneFold = false;
 
         #region Texture Definitions
         // Texture definitions
-        internal Texture tHorizontalSep = GameDatabase.Instance.GetTexture("KerbalKonstructs/Assets/horizontalsep2", false);        
+        internal Texture tHorizontalSep = GameDatabase.Instance.GetTexture("KerbalKonstructs/Assets/horizontalsep2", false);
         internal Texture tCopyPos = GameDatabase.Instance.GetTexture("KerbalKonstructs/Assets/copypos", false);
-        internal Texture tPastePos = GameDatabase.Instance.GetTexture("KerbalKonstructs/Assets/pastepos", false);                       
+        internal Texture tPastePos = GameDatabase.Instance.GetTexture("KerbalKonstructs/Assets/pastepos", false);
         internal Texture tSnap = GameDatabase.Instance.GetTexture("KerbalKonstructs/Assets/snapto", false);
         internal Texture tFoldOut = GameDatabase.Instance.GetTexture("KerbalKonstructs/Assets/foldin", false);
         internal Texture tFoldIn = GameDatabase.Instance.GetTexture("KerbalKonstructs/Assets/foldout", false);
@@ -47,15 +46,14 @@ namespace KerbalKonstructs.UI
 
         #region Switches
         // Switches
-        internal Boolean enableColliders = false;
+        internal bool enableColliders = false;
         internal static bool isScanable = false;
 
-        //public static Boolean editingLaunchSite = false;
+        //public static bool editingLaunchSite = false;
 
-        //   public static Boolean editingFacility = false;
+        //   public static bool editingFacility = false;
 
-        internal Boolean SnapRotateMode = false;
-
+        internal bool SnapRotateMode = false;
 
         #endregion
 
@@ -92,9 +90,7 @@ namespace KerbalKonstructs.UI
 
         internal static String facType = "None";
         internal static String sGroup = "Ungrouped";
-        internal String increment = "0.1";
-
-
+        private double increment = 0.1;
 
         internal Vector3 vbsnapangle1 = new Vector3(0, 0, 0);
         internal Vector3 vbsnapangle2 = new Vector3(0, 0, 0);
@@ -137,10 +133,9 @@ namespace KerbalKonstructs.UI
 
         private double rotation = 0d;
 
-        private static float vis = 0;
+        private static double vis = 0;
 
-
-        private static float modelScale = 1f;
+        private static double modelScale = 1f;
 
         private bool guiInitialized = false;
 
@@ -182,12 +177,9 @@ namespace KerbalKonstructs.UI
         public EditorGUI()
         {
             listStyle.normal.textColor = Color.white;
-            listStyle.onHover.background =
-            listStyle.hover.background = new Texture2D(2, 2);
-            listStyle.padding.left =
-            listStyle.padding.right =
-            listStyle.padding.top =
-            listStyle.padding.bottom = 4;
+            listStyle.onHover.background = listStyle.hover.background = new Texture2D(2, 2);
+            listStyle.padding.left = listStyle.padding.right =
+                listStyle.padding.top = listStyle.padding.bottom = 4;
 
             navStyle.padding.left = 0;
             navStyle.padding.right = 0;
@@ -228,8 +220,7 @@ namespace KerbalKonstructs.UI
 
                     doneFold = true;
                 }
-
-                if (!foldedIn)
+                else
                 {
                     if (doneFold)
                         toolRect = new Rect(toolRect.xMin, toolRect.yMin, toolRect.width + 45, toolRect.height + 250);
@@ -294,7 +285,7 @@ namespace KerbalKonstructs.UI
         void InstanceEditorWindow(int windowID)
         {
             //initialize values
-            rotation = (double)selectedObject.RotationAngle;
+            rotation = selectedObject.RotationAngle;
             referenceVector = (Vector3d)selectedObject.RadialPosition;
             orientation = selectedObject.Orientation;
             modelScale = selectedObject.ModelScale;
@@ -341,14 +332,11 @@ namespace KerbalKonstructs.UI
 
             GUILayout.BeginHorizontal();
 
-            if (foldedIn) tFolded = tFoldOut;
-            if (!foldedIn) tFolded = tFoldIn;
+            tFolded = foldedIn ? tFoldOut : tFoldIn;
 
             if (GUILayout.Button(tFolded, GUILayout.Height(23), GUILayout.Width(23)))
             {
-                if (foldedIn) foldedIn = false;
-                else
-                    foldedIn = true;
+                foldedIn = !foldedIn;
             }
 
             GUILayout.Button(selectedObject.model.title + " ("+ selectedObject.indexInGroup.ToString() + ")", GUILayout.Height(23));
@@ -387,14 +375,10 @@ namespace KerbalKonstructs.UI
                 {
                     if (GUILayout.Button(new GUIContent(tSnap, "Snap to Target"), GUILayout.Width(23), GUILayout.Height(23)))
                     {
-                        if (snapTargetInstance == null)
-                        {
-
-                        }
-                        else
+                        if (snapTargetInstance != null)
                         {
                             Vector3 snapTargetPos = (Vector3)snapTargetInstance.RadialPosition;
-                            float snapTargetAlt = (float)snapTargetInstance.RadiusOffset;
+                            double snapTargetAlt = snapTargetInstance.RadiusOffset;
                             selectedObject.RadialPosition = snapTargetPos;
                             selectedObject.RadiusOffset = snapTargetAlt;
                         }
@@ -406,33 +390,38 @@ namespace KerbalKonstructs.UI
                 if (!foldedIn)
                 {
                     GUILayout.Label("Increment");
-                    increment = GUILayout.TextField(increment, 5, GUILayout.Width(48));
+                    increment = double.Parse(GUILayout.TextField(increment.ToString(), 5, GUILayout.Width(48)));
 
                     GUILayout.EndHorizontal();
                     GUILayout.BeginHorizontal();
-                    if (GUILayout.Button("0.001", GUILayout.Height(18)))
+                    var h = GUILayout.Height(18);
+                    if (GUILayout.Button("0.001", h))
                     {
-                        increment = "0.001";
+                        increment = 0.001;
                     }
-                    if (GUILayout.Button("0.01", GUILayout.Height(18)))
+                    if (GUILayout.Button("0.01", h))
                     {
-                        increment = "0.01";
+                        increment = 0.01;
                     }
-                    if (GUILayout.Button("0.1", GUILayout.Height(18)))
+                    if (GUILayout.Button("0.1", h))
                     {
-                        increment = "0.1";
+                        increment = 0.1;
                     }
-                    if (GUILayout.Button("1", GUILayout.Height(18)))
+                    if (GUILayout.Button("1", h))
                     {
-                        increment = "1";
+                        increment = 1;
                     }
-                    if (GUILayout.Button("10", GUILayout.Height(18)))
+                    if (GUILayout.Button("10", h))
                     {
-                        increment = "10";
+                        increment = 10;
                     }
-                    if (GUILayout.Button("25", GUILayout.Height(16)))
+                    if (GUILayout.Button("25", h))
                     {
-                        increment = "25";
+                        increment = 25;
+                    }
+                    if (GUILayout.Button("100", h))
+                    {
+                        increment = 100;
                     }
                     GUILayout.EndHorizontal();
                     GUILayout.BeginHorizontal();
@@ -440,19 +429,24 @@ namespace KerbalKonstructs.UI
                 else
                 {
                     GUILayout.Label("i");
-                    increment = GUILayout.TextField(increment, 3, GUILayout.Width(25));
+                    increment = double.Parse(GUILayout.TextField(increment.ToString(), 3, GUILayout.Width(25)));
+                    var h = GUILayout.Height(23);
 
-                    if (GUILayout.Button("0.1", GUILayout.Height(23)))
+                    if (GUILayout.Button("0.1", h))
                     {
-                        increment = "0.1";
+                        increment = 0.1;
                     }
-                    if (GUILayout.Button("1", GUILayout.Height(23)))
+                    if (GUILayout.Button("1", h))
                     {
-                        increment = "1";
+                        increment = 1;
                     }
-                    if (GUILayout.Button("10", GUILayout.Height(23)))
+                    if (GUILayout.Button("10", h))
                     {
-                        increment = "10";
+                        increment = 10;
+                    }
+                    if (GUILayout.Button("100", h))
+                    {
+                        increment = 100;
                     }
                 }
             }
@@ -489,6 +483,8 @@ namespace KerbalKonstructs.UI
             //
             GUILayout.BeginHorizontal();
 
+            bool holdLeft, tickLeft;
+
             if (referenceSystem == Space.Self)
             {
                 GUILayout.Label("Back / Forward:");
@@ -496,39 +492,45 @@ namespace KerbalKonstructs.UI
 
                 if (foldedIn) fTempWidth = 40f;
 
-                if (GUILayout.RepeatButton("<<", GUILayout.Width(30), GUILayout.Height(21)) || GUILayout.Button("<", GUILayout.Width(30), GUILayout.Height(21)))
+                holdLeft = GUILayout.RepeatButton("<<", GUILayout.Width(30), GUILayout.Height(21));
+                tickLeft = GUILayout.Button("<", GUILayout.Width(30), GUILayout.Height(21));
+                if (holdLeft || tickLeft)
                 {
-                    SetTransform(Vector3.back * float.Parse(increment));
+                    SetTransform(Vector3d.back * modelScale * increment);
                 }
                 if (GUILayout.Button(">", GUILayout.Width(30), GUILayout.Height(21)) || GUILayout.RepeatButton(">>", GUILayout.Width(30), GUILayout.Height(21)))
                 {
-                    SetTransform(Vector3.forward * float.Parse(increment));
+                    SetTransform(Vector3d.forward * modelScale * increment);
                 }
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Left / Right:");
                 GUILayout.FlexibleSpace();
-                if (GUILayout.RepeatButton("<<", GUILayout.Width(30), GUILayout.Height(21)) || GUILayout.Button("<", GUILayout.Width(30), GUILayout.Height(21)))
+                holdLeft = GUILayout.RepeatButton("<<", GUILayout.Width(30), GUILayout.Height(21));
+                tickLeft = GUILayout.Button("<", GUILayout.Width(30), GUILayout.Height(21));
+                if (holdLeft || tickLeft)
                 {
-                    SetTransform(Vector3.left * float.Parse(increment));
+                    SetTransform(Vector3d.left * modelScale * increment);
                 }
                 if (GUILayout.Button(">", GUILayout.Width(30), GUILayout.Height(21)) || GUILayout.RepeatButton(">>", GUILayout.Width(30), GUILayout.Height(21)))
                 {
-                    SetTransform(Vector3.right * float.Parse(increment));
+                    SetTransform(Vector3d.right * modelScale * increment);
                 }
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Down / Up:");
                 GUILayout.FlexibleSpace();
-                if (GUILayout.RepeatButton("<<", GUILayout.Width(30), GUILayout.Height(21)) || GUILayout.Button("<", GUILayout.Width(30), GUILayout.Height(21)))
+                holdLeft = GUILayout.RepeatButton("<<", GUILayout.Width(30), GUILayout.Height(21));
+                tickLeft = GUILayout.Button("<", GUILayout.Width(30), GUILayout.Height(21));
+                if (holdLeft || tickLeft)
                 {
-                    SetTransform(Vector3.down * float.Parse(increment));
+                    SetTransform(Vector3d.down * modelScale * increment);
                 }
                 if (GUILayout.Button(">", GUILayout.Width(30), GUILayout.Height(21)) || GUILayout.RepeatButton(">>", GUILayout.Width(30), GUILayout.Height(21)))
                 {
-                    SetTransform(Vector3.up * float.Parse(increment));
+                    SetTransform(Vector3d.up * modelScale * increment);
                 }
 
             }
@@ -539,26 +541,30 @@ namespace KerbalKonstructs.UI
 
                 if (foldedIn) fTempWidth = 40f;
 
-                if (GUILayout.RepeatButton("<<", GUILayout.Width(30), GUILayout.Height(21)) || GUILayout.Button("<", GUILayout.Width(30), GUILayout.Height(21)))
+                holdLeft = GUILayout.RepeatButton("<<", GUILayout.Width(30), GUILayout.Height(21));
+                tickLeft = GUILayout.Button("<", GUILayout.Width(30), GUILayout.Height(21));
+                if (holdLeft || tickLeft)
                 {
-                    Setlatlng(0d, -double.Parse(increment));
+                    Setlatlng(0d, modelScale * -increment);
                 }
                 if (GUILayout.Button(">", GUILayout.Width(30), GUILayout.Height(21)) || GUILayout.RepeatButton(">>", GUILayout.Width(30), GUILayout.Height(21)))
                 {
-                    Setlatlng(0d, double.Parse(increment));
+                    Setlatlng(0d, modelScale * increment);
                 }
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("South / North:");
                 GUILayout.FlexibleSpace();
-                if (GUILayout.RepeatButton("<<", GUILayout.Width(30), GUILayout.Height(21)) || GUILayout.Button("<", GUILayout.Width(30), GUILayout.Height(21)))
+                holdLeft = GUILayout.RepeatButton("<<", GUILayout.Width(30), GUILayout.Height(21));
+                tickLeft = GUILayout.Button("<", GUILayout.Width(30), GUILayout.Height(21));
+                if (holdLeft || tickLeft)
                 {
-                    Setlatlng(-double.Parse(increment), 0d);
+                    Setlatlng(modelScale * -increment, 0d);
                 }
                 if (GUILayout.Button(">", GUILayout.Width(30), GUILayout.Height(21)) || GUILayout.RepeatButton(">>", GUILayout.Width(30), GUILayout.Height(21)))
                 {
-                    Setlatlng(double.Parse(increment), 0d);
+                    Setlatlng(modelScale * increment, 0d);
                 }
 
             }
@@ -581,24 +587,24 @@ namespace KerbalKonstructs.UI
 
             GUI.enabled = !KerbalKonstructs.instance.bDisablePositionEditing;
 
-            // 
+            //
             // Altitude editing
             //
             GUILayout.BeginHorizontal();
+            GUILayout.Label("Alt.");
+            GUILayout.FlexibleSpace();
+            altitude = double.Parse(GUILayout.TextField(altitude.ToString(), 25, GUILayout.Width(fTempWidth)));
+            holdLeft = GUILayout.RepeatButton("<<", GUILayout.Width(30), GUILayout.Height(21));
+            tickLeft = GUILayout.Button("<", GUILayout.Width(30), GUILayout.Height(21));
+            if (holdLeft || tickLeft)
             {
-                GUILayout.Label("Alt.");
-                GUILayout.FlexibleSpace();
-                altitude = double.Parse(GUILayout.TextField(altitude.ToString(), 25, GUILayout.Width(fTempWidth)));
-                if (GUILayout.RepeatButton("<<", GUILayout.Width(30), GUILayout.Height(21)) || GUILayout.Button("<", GUILayout.Width(30), GUILayout.Height(21)))
-                {
-                    altitude -= double.Parse(increment);
-                    saveSettings();
-                }
-                if (GUILayout.Button(">", GUILayout.Width(30), GUILayout.Height(21)) || GUILayout.RepeatButton(">>", GUILayout.Width(30), GUILayout.Height(21)))
-                {
-                    altitude += double.Parse(increment);
-                    saveSettings();
-                }
+                altitude -= modelScale * increment;
+                saveSettings();
+            }
+            if (GUILayout.Button(">", GUILayout.Width(30), GUILayout.Height(21)) || GUILayout.RepeatButton(">>", GUILayout.Width(30), GUILayout.Height(21)))
+            {
+                altitude += modelScale * increment;
+                saveSettings();
             }
             GUILayout.EndHorizontal();
 
@@ -630,25 +636,36 @@ namespace KerbalKonstructs.UI
                 {
                     GUILayout.Label("Vis.");
                     GUILayout.FlexibleSpace();
-                    vis = float.Parse(GUILayout.TextField(vis.ToString(), 6, GUILayout.Width(80)));
-                    if (GUILayout.Button("Min", GUILayout.Width(30), GUILayout.Height(23)))
+                    vis = double.Parse(GUILayout.TextField(vis.ToString(), 15, GUILayout.Width(120)));
+                    var w = GUILayout.Width(30);
+                    var h = GUILayout.Height(23);
+
+                    if (GUILayout.Button("Min", w, h))
                     {
-                        vis -= 1000000000f;
+                        vis = -1;
+                        // saveSettings will clamp a negative value to the minimum
                         saveSettings();
                     }
-                    if (GUILayout.Button("-", GUILayout.Width(30), GUILayout.Height(23)))
+                    if (GUILayout.Button("-", w, h))
                     {
-                        vis -= 2500f;
+                        vis -= modelScale * increment * 2500;
                         saveSettings();
                     }
-                    if (GUILayout.Button("+", GUILayout.Width(30), GUILayout.Height(23)))
+                    if (GUILayout.Button("+", w, h))
                     {
-                        vis += 2500f;
+                        vis += modelScale * increment * 2500;
                         saveSettings();
                     }
-                    if (GUILayout.Button("Max", GUILayout.Width(30), GUILayout.Height(23)))
+                    if (GUILayout.Button("Max", w, h))
                     {
-                        vis = (float)KerbalKonstructs.instance.maxEditorVisRange;
+                        try
+                        {
+                            vis = modelScale * KerbalKonstructs.instance.maxEditorVisRange;
+                        }
+                        catch
+                        {
+                            vis = Double.MaxValue;
+                        }
                         saveSettings();
                     }
                 }
@@ -705,30 +722,32 @@ namespace KerbalKonstructs.UI
                     GUILayout.Label("Pitch:");
                     GUILayout.FlexibleSpace();
 
-                    fTempWidth = 80f;
+                    fTempWidth = foldedIn ? 40f : 80f;
 
-                    if (foldedIn) fTempWidth = 40f;
-
-                    if (GUILayout.RepeatButton("<<", GUILayout.Width(30), GUILayout.Height(21)) || GUILayout.Button("<", GUILayout.Width(30), GUILayout.Height(21)))
+                    holdLeft = GUILayout.RepeatButton("<<", GUILayout.Width(30), GUILayout.Height(21));
+                    tickLeft = GUILayout.Button("<", GUILayout.Width(30), GUILayout.Height(21));
+                    if (holdLeft || tickLeft)
                     {
-                        SetPitch(float.Parse(increment));
+                        SetPitch(increment);
                     }
                     if (GUILayout.Button(">", GUILayout.Width(30), GUILayout.Height(21)) || GUILayout.RepeatButton(">>", GUILayout.Width(30), GUILayout.Height(21)))
                     {
-                        SetPitch(-float.Parse(increment));
+                        SetPitch(-increment);
                     }
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Roll:");
                     GUILayout.FlexibleSpace();
-                    if (GUILayout.RepeatButton("<<", GUILayout.Width(30), GUILayout.Height(21)) || GUILayout.Button("<", GUILayout.Width(30), GUILayout.Height(21)))
+                    holdLeft = GUILayout.RepeatButton("<<", GUILayout.Width(30), GUILayout.Height(21));
+                    tickLeft = GUILayout.Button("<", GUILayout.Width(30), GUILayout.Height(21));
+                    if (holdLeft || tickLeft)
                     {
-                        SetRoll(float.Parse(increment));
+                        SetRoll(increment);
                     }
                     if (GUILayout.Button(">", GUILayout.Width(30), GUILayout.Height(21)) || GUILayout.RepeatButton(">>", GUILayout.Width(30), GUILayout.Height(21)))
                     {
-                        SetRoll(-float.Parse(increment));
+                        SetRoll(-increment);
                     }
 
                 }
@@ -743,22 +762,24 @@ namespace KerbalKonstructs.UI
                     GUILayout.Label("Heading:");
                     GUILayout.FlexibleSpace();
                     GUILayout.TextField(heading.ToString(), 9, GUILayout.Width(fTempWidth));
+                    var w = GUILayout.Width(30);
+                    var h = GUILayout.Height(23);
 
-                    if (GUILayout.RepeatButton("<<", GUILayout.Width(30), GUILayout.Height(23)))
+                    if (GUILayout.RepeatButton("<<", w, h))
                     {
-                        SetRotation(-double.Parse(increment));
+                        SetRotation(-increment);
                     }
-                    if (GUILayout.Button("<", GUILayout.Width(30), GUILayout.Height(23)))
+                    if (GUILayout.Button("<", w, h))
                     {
-                        SetRotation(-double.Parse(increment));
+                        SetRotation(-increment);
                     }
-                    if (GUILayout.Button(">", GUILayout.Width(30), GUILayout.Height(23)))
+                    if (GUILayout.Button(">", w, h))
                     {
-                        SetRotation(double.Parse(increment));
+                        SetRotation(increment);
                     }
-                    if (GUILayout.RepeatButton(">>", GUILayout.Width(30), GUILayout.Height(23)))
+                    if (GUILayout.RepeatButton(">>", w, h))
                     {
-                        SetRotation(double.Parse(increment));
+                        SetRotation(increment);
                     }
                 }
                 GUILayout.EndHorizontal();
@@ -766,6 +787,7 @@ namespace KerbalKonstructs.UI
                 GUILayout.Space(1);
                 GUILayout.Box(tHorizontalSep, BoxNoBorder, GUILayout.Height(4));
                 GUILayout.Space(2);
+
                 //
                 // Scale
                 //
@@ -773,23 +795,33 @@ namespace KerbalKonstructs.UI
                 {
                     GUILayout.Label("Model Scale: ");
                     GUILayout.FlexibleSpace();
-                    modelScale = float.Parse(GUILayout.TextField(modelScale.ToString(), 4, GUILayout.Width(fTempWidth)));
+                    modelScale = double.Parse(GUILayout.TextField(modelScale.ToString(), 4, GUILayout.Width(fTempWidth)));
+                    var w = GUILayout.Width(30);
+                    var h = GUILayout.Height(23);
 
-                    if (GUILayout.RepeatButton("<<", GUILayout.Width(30), GUILayout.Height(23)))
+                    if (GUILayout.RepeatButton("<<", w, h))
                     {
-                        modelScale -= float.Parse(increment); saveSettings();
+                        modelScale -= increment;
+                        vis        *= modelScale / (modelScale + increment);
+                        saveSettings();
                     }
-                    if (GUILayout.Button("<", GUILayout.Width(30), GUILayout.Height(23)))
+                    if (GUILayout.Button("<", w, h))
                     {
-                        modelScale -= float.Parse(increment); saveSettings();
+                        modelScale -= increment;
+                        vis        *= modelScale / (modelScale + increment);
+                        saveSettings();
                     }
-                    if (GUILayout.Button(">", GUILayout.Width(30), GUILayout.Height(23)))
+                    if (GUILayout.Button(">", w, h))
                     {
-                        modelScale += float.Parse(increment); saveSettings();
+                        modelScale += increment;
+                        vis        *= modelScale / (modelScale - increment);
+                        saveSettings();
                     }
-                    if (GUILayout.RepeatButton(">>", GUILayout.Width(30), GUILayout.Height(23)))
+                    if (GUILayout.RepeatButton(">>", w, h))
                     {
-                        modelScale += float.Parse(increment); saveSettings();
+                        modelScale += increment;
+                        vis        *= modelScale / (modelScale - increment);
+                        saveSettings();
                     }
                 }
                 GUILayout.EndHorizontal();
@@ -801,7 +833,6 @@ namespace KerbalKonstructs.UI
 
             if (!foldedIn)
             {
-
                 if (GUILayout.Button("Facility Type: " + facType, GUILayout.Height(23)))
                 {
                     if (!FacilityEditor.instance.IsOpen())
@@ -841,7 +872,7 @@ namespace KerbalKonstructs.UI
                             collider.GetComponent<Collider>().enabled = true;
                         }
                     }
-                    if (!enableColliders)
+                    else
                     {
                         foreach (GameObject collider in colliderList)
                         {
@@ -855,7 +886,7 @@ namespace KerbalKonstructs.UI
                     {
                         KerbalKonstructs.instance.saveObjects();
                         StaticModel oModel = selectedObject.model;
-                        float fOffset = selectedObject.RadiusOffset;
+                        double fOffset = selectedObject.RadiusOffset;
                         Vector3 vPosition = selectedObject.RadialPosition;
                         float fAngle = selectedObject.RotationAngle;
                         smessage = "Spawned duplicate " + selectedObject.model.title;
@@ -887,7 +918,7 @@ namespace KerbalKonstructs.UI
                 {
                     KerbalKonstructs.instance.SaveInstanceByCfg(selectedObject.configPath);
                     StaticModel oModel = selectedObject.model;
-                    float fOffset = selectedObject.RadiusOffset;
+                    double fOffset = selectedObject.RadiusOffset;
                     Vector3 vPosition = selectedObject.RadialPosition;
                     float fAngle = selectedObject.RotationAngle;
                     smessage = "Spawned duplicate " + selectedObject.model.title;
@@ -940,7 +971,7 @@ namespace KerbalKonstructs.UI
 
                 if (GUILayout.Button("Delete Instance", GUILayout.Height(21)))
                 {
-                    DeleteInstance();                   
+                    DeleteInstance();
                 }
 
                 GUILayout.Space(15);
@@ -979,7 +1010,7 @@ namespace KerbalKonstructs.UI
         #region Utility Functions
 
 
-        internal void DeleteInstance ()
+        internal void DeleteInstance()
         {
             if (snapTargetInstance == selectedObject)
                 snapTargetInstance = null;
@@ -988,7 +1019,6 @@ namespace KerbalKonstructs.UI
             if (selectedObjectPrevious == selectedObject)
                 selectedObjectPrevious = null;
 
-
             if (selectedObject.hasLauchSites)
             {
                 LaunchSiteManager.DeleteLaunchSite(selectedObject.launchSite);
@@ -996,34 +1026,32 @@ namespace KerbalKonstructs.UI
 
             KerbalKonstructs.instance.deleteObject(selectedObject);
             selectedObject = null;
-
-            return;
         }
 
 
         /// <summary>
-        /// Spawns an Instance of an defined StaticModel 
+        /// Spawns an Instance of an defined StaticModel
         /// </summary>
         /// <param name="model"></param>
         /// <param name="fOffset"></param>
         /// <param name="vPosition"></param>
         /// <param name="fAngle"></param>
         /// <returns></returns>
-        public void spawnInstance(StaticModel model, float fOffset, Vector3 vPosition, float fAngle)
+        public void spawnInstance(StaticModel model, double fOffset, Vector3d vPosition, float fAngle)
         {
             StaticInstance instance = new StaticInstance();
             instance.gameObject = UnityEngine.Object.Instantiate(model.prefab);
             instance.RadiusOffset = fOffset;
             instance.CelestialBody = KerbalKonstructs.instance.getCurrentBody();
-            string newGroup = (selectedObject != null) ? (string)selectedObject.Group : "Ungrouped";
+            string newGroup = selectedObject?.Group ?? "Ungrouped";
             instance.Group = newGroup;
             instance.RadialPosition = vPosition;
-            instance.RotationAngle = fAngle;
+            rotation = instance.RotationAngle = fAngle;
             instance.Orientation = Vector3.up;
             instance.VisibilityRange = 25000f;
 
             instance.model = model;
-            Directory.CreateDirectory(KSPUtil.ApplicationRootPath + "GameData/" + KerbalKonstructs.newInstancePath );
+            Directory.CreateDirectory(KSPUtil.ApplicationRootPath + "GameData/" + KerbalKonstructs.newInstancePath);
             instance.configPath = KerbalKonstructs.newInstancePath + "/" + model.name + "-instances.cfg";
             instance.configUrl = null;
 
@@ -1043,7 +1071,9 @@ namespace KerbalKonstructs.UI
         {
             get
             {
-                return (selectedObject.pqsCity.transform.position + 4 * selectedObject.pqsCity.transform.up + 4 * selectedObject.pqsCity.transform.right);
+                return selectedObject.pqsCity.transform.position
+                    + 4 * selectedObject.pqsCity.transform.up
+                    + 4 * selectedObject.pqsCity.transform.right;
             }
         }
 
@@ -1108,7 +1138,8 @@ namespace KerbalKonstructs.UI
         /// </summary>
         private void UpdateVectors()
         {
-            if (selectedObject == null) { return; }
+            if (selectedObject == null)
+                return;
 
             if (referenceSystem == Space.Self)
             {
@@ -1131,7 +1162,7 @@ namespace KerbalKonstructs.UI
                 rightVR.Start = vectorDrawPosition;
                 rightVR.draw();
             }
-            if (referenceSystem == Space.World)
+            else if (referenceSystem == Space.World)
             {
                 northVR.SetShow(true);
                 eastVR.SetShow(true);
@@ -1228,14 +1259,14 @@ namespace KerbalKonstructs.UI
         /// </summary>
         /// <param name="axis"></param>
         /// <param name="amount"></param>
-        internal void SetPitch(float amount)
+        internal void SetPitch(double amount)
         {
             Vector3 upProjeced = Vector3.ProjectOnPlane(orientation, Vector3.forward);
             double compensation = Vector3.Dot(Vector3.right, upProjeced);
             double internalRotation = rotation - compensation;
             Vector3 realRight = KKMath.RotateVector(Vector3.right, Vector3.back, internalRotation);
 
-            Quaternion rotate = Quaternion.AngleAxis(amount, realRight);
+            Quaternion rotate = Quaternion.AngleAxis((float)amount, realRight);
             orientation = rotate * orientation;
 
             Vector3 oldfwd = selectedObject.gameObject.transform.forward;
@@ -1259,16 +1290,14 @@ namespace KerbalKonstructs.UI
         /// </summary>
         /// <param name="axis"></param>
         /// <param name="amount"></param>
-        internal void SetRoll(float amount)
+        internal void SetRoll(double amount)
         {
-
-
             Vector3 upProjeced = Vector3.ProjectOnPlane(orientation, Vector3.forward);
             double compensation = Vector3.Dot(Vector3.right, upProjeced);
             double internalRotation = rotation - compensation;
             Vector3 realFwd = KKMath.RotateVector(Vector3.forward, Vector3.right, internalRotation);
 
-            Quaternion rotate = Quaternion.AngleAxis(amount, realFwd);
+            Quaternion rotate = Quaternion.AngleAxis((float)amount, realFwd);
             orientation = rotate * orientation;
 
 
@@ -1317,7 +1346,7 @@ namespace KerbalKonstructs.UI
         internal void SetTransform(Vector3 direction)
         {
             // adjust transform for scaled models
-            direction = direction / modelScale;
+            direction = direction / (float) modelScale;
             direction = selectedObject.gameObject.transform.TransformVector(direction);
             double northInc = Vector3d.Dot(northVector, direction);
             double eastInc = Vector3d.Dot(eastVector, direction);
@@ -1340,9 +1369,17 @@ namespace KerbalKonstructs.UI
 
             rotation = (360d + rotation) % 360d;
 
-            if (vis > (float)KerbalKonstructs.instance.maxEditorVisRange)
+            try
             {
-                vis = (float)KerbalKonstructs.instance.maxEditorVisRange;
+                if (vis > modelScale * KerbalKonstructs.instance.maxEditorVisRange)
+                {
+                    vis = modelScale * KerbalKonstructs.instance.maxEditorVisRange;
+                }
+            }
+            catch
+            {
+                // Just in case of overflow
+                vis = Double.MaxValue;
             }
             if (vis < 1000)
             {
@@ -1351,19 +1388,18 @@ namespace KerbalKonstructs.UI
 
             selectedObject.RadialPosition = referenceVector;
 
-            selectedObject.RadiusOffset = (float)altitude;
+            selectedObject.RadiusOffset = altitude;
             selectedObject.RotationAngle = (float)rotation;
             selectedObject.VisibilityRange = vis;
             selectedObject.RefLatitude = latitude;
             selectedObject.RefLongitude = longitude;
 
-            selectedObject.FacilityType =  facType;
-            selectedObject.Group= sGroup;
+            selectedObject.FacilityType = facType;
+            selectedObject.Group = sGroup;
 
-            selectedObject.ModelScale =  modelScale;
+            selectedObject.ModelScale = modelScale;
 
-
-            selectedObject.isScanable =  isScanable;
+            selectedObject.isScanable = isScanable;
 
             updateSelection(selectedObject);
 
@@ -1396,31 +1432,31 @@ namespace KerbalKonstructs.UI
             selectedObject.update();
         }
 
-
-
-        void FixDrift(bool bRotate = false)
+        private void FixDrift(bool bRotate = false)
         {
-            if (selectedSnapPoint == null || selectedSnapPoint2 == null) return;
-            if (selectedObject == null || snapTargetInstance == null) return;
+            if (selectedSnapPoint == null || selectedSnapPoint2 == null
+                || selectedObject == null || snapTargetInstance == null)
+                return;
 
-            Vector3 snapSourceLocalPos = selectedSnapPoint.transform.localPosition;
-            Vector3 snapSourceWorldPos = selectedSnapPoint.transform.position;
-            Vector3 selSourceWorldPos = selectedObject.gameObject.transform.position;
+            Vector3d snapSourceLocalPos = selectedSnapPoint.transform.localPosition;
+            Vector3d snapSourceWorldPos = selectedSnapPoint.transform.position;
+            Vector3d selSourceWorldPos = selectedObject.gameObject.transform.position;
             float selSourceRot = selectedObject.pqsCity.reorientFinalAngle;
-            Vector3 snapTargetLocalPos = selectedSnapPoint2.transform.localPosition;
-            Vector3 snapTargetWorldPos = selectedSnapPoint2.transform.position;
-            Vector3 selTargetWorldPos = snapTargetInstance.gameObject.transform.position;
+            Vector3d snapTargetLocalPos = selectedSnapPoint2.transform.localPosition;
+            Vector3d snapTargetWorldPos = selectedSnapPoint2.transform.position;
+            Vector3d selTargetWorldPos = snapTargetInstance.gameObject.transform.position;
             float selTargetRot = snapTargetInstance.pqsCity.reorientFinalAngle;
-            var spdist = 0f;
+            double spdist = 0;
 
-            if (!bRotate) spdist = Vector3.Distance(snapSourceWorldPos, snapTargetWorldPos);
-            if (bRotate) spdist = Vector3.Distance(selSourceRot * snapSourceWorldPos, selTargetRot * snapTargetWorldPos);
-
-            int iGiveUp = 0;
-
-            while (spdist > 0.01 && iGiveUp < 100)
+            if (bRotate)
             {
-                if (!bRotate)
+                spdist = Vector3.Distance(selSourceRot * snapSourceWorldPos, selTargetRot * snapTargetWorldPos);
+            }
+            else
+            {
+                spdist = Vector3.Distance(snapSourceWorldPos, snapTargetWorldPos);
+
+                for (int iGiveUp = 0; spdist > 0.01 && iGiveUp < 100; ++iGiveUp)
                 {
                     snpspos = selectedSnapPoint.transform.position;
                     snptpos = selectedSnapPoint2.transform.position;
@@ -1431,21 +1467,7 @@ namespace KerbalKonstructs.UI
                     updateSelection(selectedObject);
 
                     spdist = Vector3.Distance(selectedSnapPoint.transform.position, selectedSnapPoint2.transform.position);
-                    iGiveUp = iGiveUp + 1;
                 }
-
-                if (bRotate)
-                {
-                    iGiveUp = 100;
-                }
-            }
-        }
-
-        float getIncrement
-        {
-            get
-            {
-                return float.Parse(increment);
             }
         }
 
@@ -1453,43 +1475,40 @@ namespace KerbalKonstructs.UI
         {
             if (selectedObject != null)
             {
-
                 if (IsOpen())
                 {
                     if (Input.GetKey(KeyCode.W))
                     {
-                        SetTransform(Vector3.forward * getIncrement);
+                        SetTransform(Vector3d.forward * increment);
                     }
                     if (Input.GetKey(KeyCode.S))
                     {
-                        SetTransform(Vector3.back * getIncrement);
+                        SetTransform(Vector3d.back * increment);
                     }
                     if (Input.GetKey(KeyCode.D))
                     {
-                        SetTransform(Vector3.right * getIncrement);
+                        SetTransform(Vector3d.right * increment);
                     }
                     if (Input.GetKey(KeyCode.A))
                     {
-                        SetTransform(Vector3.left * getIncrement);
+                        SetTransform(Vector3d.left * increment);
                     }
                     if (Input.GetKey(KeyCode.E))
                     {
-                        SetRotation(-(double)getIncrement);
+                        SetRotation(-increment);
                     }
                     if (Input.GetKey(KeyCode.Q))
                     {
-                        SetRotation((double)getIncrement);
+                        SetRotation(increment);
                     }
-
                     if (Input.GetKey(KeyCode.PageUp))
                     {
-                        altitude += (double)getIncrement;
+                        altitude += increment;
                         saveSettings();
                     }
-
                     if (Input.GetKey(KeyCode.PageDown))
                     {
-                        altitude += -(double)getIncrement;
+                        altitude -= increment;
                         saveSettings();
                     }
                     if (Event.current.keyCode == KeyCode.Return)
@@ -1497,15 +1516,14 @@ namespace KerbalKonstructs.UI
                         saveSettings();
                     }
                 }
-
             }
-
         }
 
         void SnapToTarget(bool bRotate = false)
         {
-            if (selectedSnapPoint == null || selectedSnapPoint2 == null) return;
-            if (selectedObject == null || snapTargetInstance == null) return;
+            if (selectedSnapPoint == null || selectedSnapPoint2 == null
+                || selectedObject == null || snapTargetInstance == null)
+                return;
 
             Vector3 snapPointRelation = new Vector3(0, 0, 0);
             Vector3 snapPoint2Relation = new Vector3(0, 0, 0);
@@ -1516,11 +1534,8 @@ namespace KerbalKonstructs.UI
             Vector3 snapSourcePos = selectedSnapPoint.transform.localPosition;
             snapSourceWorldPos = selectedSnapPoint.transform.position;
             Vector3 selSourcePos = selectedObject.gameObject.transform.position;
-            float selSourceRot = selectedObject.pqsCity.reorientFinalAngle;
             Vector3 snapTargetPos = selectedSnapPoint2.transform.localPosition;
             snapTargetWorldPos = selectedSnapPoint2.transform.position;
-            Vector3 selTargetPos = snapTargetInstance.gameObject.transform.position;
-            float selTargetRot = snapTargetInstance.pqsCity.reorientFinalAngle;
 
             vbsnapangle1 = selectedSnapPoint.transform.position;
             vbsnapangle2 = selectedSnapPoint2.transform.position;
@@ -1548,7 +1563,6 @@ namespace KerbalKonstructs.UI
                 updateSelection(selectedObject);
 
                 // Get the offset of the source and move by that
-                Vector3 vAngles = new Vector3(0, selectedObject.pqsCity.reorientFinalAngle, 0);
                 snapPointRelation = selectedObject.gameObject.transform.position -
                     selectedSnapPoint.transform.TransformPoint(selectedSnapPoint.transform.localPosition);
                 MiscUtils.HUDMessage("" + snapPointRelation.ToString(), 60, 2);
@@ -1557,7 +1571,6 @@ namespace KerbalKonstructs.UI
                 updateSelection(selectedObject);
 
                 // Get the offset of the target and move by that
-                vAngles = new Vector3(0, snapTargetInstance.pqsCity.reorientFinalAngle, 0);
                 snapPoint2Relation = snapTargetInstance.gameObject.transform.position -
                     selectedSnapPoint2.transform.TransformPoint(selectedSnapPoint2.transform.localPosition);
                 MiscUtils.HUDMessage("" + snapPoint2Relation.ToString(), 60, 2);
@@ -1569,10 +1582,11 @@ namespace KerbalKonstructs.UI
             snapVectorNoRot = (snapSourcePos - snapTargetPos);
 
             selectedObject.RadialPosition = vFinalPos;
-            selectedObject.RadiusOffset = (float)snapTargetInstance.RadiusOffset + snapVectorNoRot.y;
+            selectedObject.RadiusOffset = snapTargetInstance.RadiusOffset + snapVectorNoRot.y;
 
             updateSelection(selectedObject);
-            if (!bRotate) FixDrift();
+            if (!bRotate)
+                FixDrift();
         }
 
         #endregion

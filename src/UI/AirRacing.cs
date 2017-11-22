@@ -38,10 +38,10 @@ namespace KerbalKonstructs.UI
 		public float fNextGate = 1;
 		public float fTimeMins = 0;
 		public float fTimeSecs = 0;
-		public float fDistToStart = 0f;
-		public float fDistToFinish = 0f;
-		public float fDistToGate = 0f;
-		public float fDistBetween = 0;
+		public double fDistToStart = 0f;
+		public double fDistToFinish = 0f;
+		public double fDistToGate = 0f;
+		public double fDistBetween = 0;
 
 		public double dStartTime = 0;
 		public double dTimeSinceStart = 0;
@@ -296,9 +296,9 @@ namespace KerbalKonstructs.UI
 			return soNextGate;
 		}
 
-		public float GetDistanceToGate(StaticInstance soGate, Vector3 vPos)
+		public double GetDistanceToGate(StaticInstance soGate, Vector3 vPos)
 		{
-			float fDistance = 0f;
+			double fDistance = 0;
 			Vector3 vCenter = new Vector3(0, 0, 0);
 			StaticInstance soNearestPole = null;
 
@@ -306,22 +306,22 @@ namespace KerbalKonstructs.UI
 			string sFacType = soGate.legacyfacilityID;
 			soNearestPole = GetNearestFacility(soGate.gameObject.transform.position, sFacType + "P", sGroup);
 
-			vCenter = Vector3.Lerp(soGate.gameObject.transform.position, soNearestPole.gameObject.transform.position, 0.5f);
+			vCenter = Vector3d.Lerp(soGate.gameObject.transform.position, soNearestPole.gameObject.transform.position, 0.5f);
 
-			fDistance = Vector3.Distance(vCenter, vPos);
+			fDistance = Vector3d.Distance(vCenter, vPos);
 			return fDistance;
 		}
 
-		public float GetGateWidth(StaticInstance soGate)
+		public double GetGateWidth(StaticInstance soGate)
 		{
-			float fDistance = 0f;
+			double fDistance = 0f;
 			StaticInstance soNearestPole = null;
 
 			string sGroup = soGate.Group;
 			string sFacType = soGate.legacyfacilityID;
 			soNearestPole = GetNearestFacility(soGate.gameObject.transform.position, sFacType + "P", sGroup);
 
-			fDistance = Vector3.Distance(soGate.gameObject.transform.position, soNearestPole.gameObject.transform.position);
+			fDistance = Vector3d.Distance(soGate.gameObject.transform.position, soNearestPole.gameObject.transform.position);
 			return fDistance;
 		}
 
@@ -338,20 +338,17 @@ namespace KerbalKonstructs.UI
 			started = false;
 		}
 
-        public static StaticInstance GetNearestFacility(Vector3 vPosition, string sFacilityType, string sGroup = "None")
+        public static StaticInstance GetNearestFacility(Vector3d vPosition, string sFacilityType, string sGroup = "None")
         {
             StaticInstance soFacility = null;
 
-            float fLastDist = 100000000f;
-            float fDistance = 0f;
-            float fNearest = 0f;
+            double fLastDist = 100000000f;
+            double fDistance = 0f;
 
             foreach (StaticInstance instance in StaticDatabase.allStaticInstances)
             {
-                if (sGroup != "None")
-                {
-                    if (instance.Group != sGroup) continue;
-                }
+                if (sGroup != "None" && instance.Group != sGroup)
+					continue;
 
                 if (instance.legacyfacilityID == sFacilityType)
                 {
@@ -359,13 +356,13 @@ namespace KerbalKonstructs.UI
 
                     if (fDistance < fLastDist)
                     {
-                        fNearest = fDistance;
                         soFacility = instance;
                     }
 
                     fLastDist = fDistance;
                 }
-                else continue;
+                else
+					continue;
             }
 
             return soFacility;

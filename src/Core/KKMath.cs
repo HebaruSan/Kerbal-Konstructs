@@ -9,8 +9,8 @@ namespace KerbalKonstructs.Core
     class KKMath
     {
 
-        internal static double rad2deg { get { return  180/Math.PI ;  } }
-        internal static double deg2rad { get { return  Math.PI/180 ; } }
+        internal const double rad2deg = 180.0/Math.PI;
+        internal const double deg2rad = Math.PI/180.0;
 
         /// <summary>
         /// Returns a Vector3d from the body center to surface with the magnitude (body.radius + altitude)
@@ -28,7 +28,7 @@ namespace KerbalKonstructs.Core
             double rlat = Mathf.Deg2Rad * lat;
 
             Vector3d rad = new Vector3d(Math.Cos(rlat) * Math.Cos(rlon), Math.Sin(rlat), Math.Cos(rlat) * Math.Sin(rlon));
-            return rad* n;
+            return rad * n;
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace KerbalKonstructs.Core
         }
 
         /// <summary>
-        /// Returns the Lattitude of a RadialPosition (in Degrees) 
+        /// Returns the Lattitude of a RadialPosition (in Degrees)
         /// </summary>
         /// <param name="radialPosition"></param>
         /// <returns></returns>
